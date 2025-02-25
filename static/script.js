@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const formToggleContainer = document.getElementById('formToggleContainer');
     const toggleFormBtn = document.getElementById('toggleFormBtn');
     const hitCountSpan = document.getElementById('hitCount');
-    const hitCountContainer = document.getElementById('hitCountContainer');
+    const userIPSpan = document.getElementById('userIP');
 
     // Function to add city to dropdown if it doesn't exist
     function addCityToDropdown(city) {
@@ -210,6 +210,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    async function updateUserIP() {
+        try {
+            const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
+            if (ipInfo && ipInfo.ip) {
+                userIPSpan.textContent = `IP: ${ipInfo.ip}`;
+            } else {
+                userIPSpan.textContent = 'IP: Not found';
+            }
+        } catch (error) {
+            console.error('Error updating user IP:', error);
+            userIPSpan.textContent = 'IP: Error';
+        }
+    }
+
     async function updateHitCount() {
         try {
             const response = await fetch('/api/hit-count', {
@@ -220,20 +234,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const data = await response.json();
             hitCountSpan.textContent = data.hit_count;
-
-            // Get IP info from localStorage
-            const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
-            if (ipInfo && ipInfo.ip) {
-                hitCountContainer.title = `Your IP: ${ipInfo.ip}`;
-            } else {
-                hitCountContainer.title = 'IP Address not found';
-            }
         } catch (error) {
             console.error('Error updating hit count:', error);
-            hitCountContainer.title = 'Error fetching IP Address';
         }
     }
 
-    // Call updateHitCount on page load
+    // Call updateHitCount and updateUserIP on page load
     updateHitCount();
+    updateUserIP();
 }); 
