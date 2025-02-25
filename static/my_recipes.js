@@ -105,9 +105,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <span class="badge bg-primary">${mood}</span>
-                        ${recipe.created_at ? 
-                            `<small class="text-muted">${recipe.created_at}</small>` 
-                            : ''}
+                        <div>
+                            ${recipe.created_at ? 
+                                `<small class="text-muted">${recipe.created_at}</small>` 
+                                : ''}
+                            ${recipe.user_city ? 
+                                `<small class="text-muted">, ${recipe.user_city}</small>` 
+                                : ''}
+                        </div>
                     </div>
                     <h5 class="card-title mb-3">${recipe.name}</h5>
                     <p class="card-text"><strong>Prep Time:</strong> ${recipe.prepTime}</p>
