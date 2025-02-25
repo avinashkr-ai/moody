@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const recipesContainer = document.getElementById('recipesContainer');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const hitCountSpan = document.getElementById('hitCount');
+    const hitCountContainer = document.getElementById('hitCountContainer');
 
     function showLoading() {
         loadingSpinner.style.display = 'block';
@@ -146,8 +147,17 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const data = await response.json();
             hitCountSpan.textContent = data.hit_count;
+
+            // Get IP info from localStorage
+            const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
+            if (ipInfo && ipInfo.ip) {
+                hitCountContainer.title = `Your IP: ${ipInfo.ip}`;
+            } else {
+                hitCountContainer.title = 'IP Address not found';
+            }
         } catch (error) {
             console.error('Error updating hit count:', error);
+            hitCountContainer.title = 'Error fetching IP Address';
         }
     }
 
