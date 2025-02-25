@@ -10,4 +10,8 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: IPINFO_TOKEN
-        sync: false 
+        sync: false
+      - key: GOOGLE_API_USE_MTLS_ENDPOINT
+        value: "never"
+      - key: GOOGLE_API_USE_ADAPTIVE_TIMEOUT
+        value: "false" 
