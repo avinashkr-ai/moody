@@ -172,6 +172,11 @@ def get_recipe():
         current_time = datetime.now(ist)
         recipe['created_at'] = current_time.strftime("%Y-%m-%d %I:%M %p")
         
+        # Add user info to recipe
+        recipe['user_mood'] = mood
+        recipe['user_age'] = age
+        recipe['user_city'] = city
+        
         # Create a unique recipe ID
         new_recipe_id = f'recipe_{uuid.uuid4().hex[:8]}'
         
