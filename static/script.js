@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const formContent = document.querySelector('.form-content');
     const formToggleContainer = document.getElementById('formToggleContainer');
     const toggleFormBtn = document.getElementById('toggleFormBtn');
+    const hitCountSpan = document.getElementById('hitCount');
 
     // Function to add city to dropdown if it doesn't exist
     function addCityToDropdown(city) {
@@ -207,4 +208,22 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('ipInfo', JSON.stringify(ipInfo));
         }
     });
+
+    async function updateHitCount() {
+        try {
+            const response = await fetch('/api/hit-count', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            hitCountSpan.textContent = data.hit_count;
+        } catch (error) {
+            console.error('Error updating hit count:', error);
+        }
+    }
+
+    // Call updateHitCount on page load
+    updateHitCount();
 }); 

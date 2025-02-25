@@ -37,6 +37,11 @@ firebase_admin.initialize_app(cred, {
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 model = genai.GenerativeModel('gemini-pro')
 
+# Initialize hit count
+hit_count_ref = db.reference('/hit_count')
+if hit_count_ref.get() is None:
+    hit_count_ref.set(0)
+
 def get_client_ip():
     try:
         # First try to get IP from X-Forwarded-For header
@@ -197,6 +202,23 @@ def get_my_recipes(ip):
         recipes = recipes_ref.get()
         return jsonify(recipes or {})
     except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/hit-count', methods=['POST'])
+def update_hit_count():
+    try:
+        # Get current hit count
+        current_hit_count = hit_count_ref.get() or 0
+
+        # Increase hit count by 2
+        new_hit_count = current_hit_count + 2
+
+        # Update hit count in Firebase
+        hit_count_ref.set(new_hit_count)
+
+        return jsonify({'hit_count': new_hit_count})
+    except Exception as e:
+        print(f"Error updating hit count: {e}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

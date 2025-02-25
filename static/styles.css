@@ -403,4 +403,17 @@ body {
     #formToggleContainer .fas {
         font-size: 0.8rem;
     }
+}
+
+.navbar-text {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .navbar-text {
+        font-size: 1rem;
+    }
 } 

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const recipesContainer = document.getElementById('recipesContainer');
     const loadingSpinner = document.getElementById('loadingSpinner');
+    const hitCountSpan = document.getElementById('hitCount');
 
     function showLoading() {
         loadingSpinner.style.display = 'block';
@@ -134,6 +135,24 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return col;
     }
+
+    async function updateHitCount() {
+        try {
+            const response = await fetch('/api/hit-count', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            hitCountSpan.textContent = data.hit_count;
+        } catch (error) {
+            console.error('Error updating hit count:', error);
+        }
+    }
+
+    // Call updateHitCount on page load
+    updateHitCount();
 
     // Fetch recipes when page loads
     fetchMyRecipes();
