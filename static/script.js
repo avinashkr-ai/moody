@@ -50,34 +50,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to get IP info and store in localStorage
+    // Function to get and store IP info
     async function initializeIPInfo() {
         try {
-            // Check if we already have IP info in localStorage
+            // Check if we already have recent IP info in localStorage
             const storedIPInfo = localStorage.getItem('ipInfo');
             if (storedIPInfo) {
                 const ipInfo = JSON.parse(storedIPInfo);
-                if (ipInfo.city) {
-                    addCityToDropdown(ipInfo.city);
+                const storedTime = new Date(ipInfo.timestamp);
+                const now = new Date();
+                // If stored IP info is less than 1 hour old, use it
+                if ((now - storedTime) < 3600000) {
                     setUserCity(ipInfo.city);
+                    return ipInfo;
                 }
-                return ipInfo;
             }
 
-            const response = await fetch('/api/get-ip');
+            // Fetch new IP info
+            const response = await fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`);
             const ipInfo = await response.json();
             
-            if (ipInfo.error) {
-                throw new Error(ipInfo.error);
-            }
-
-            // Store IP info in localStorage
+            // Add timestamp and store in localStorage
+            ipInfo.timestamp = new Date().toISOString();
             localStorage.setItem('ipInfo', JSON.stringify(ipInfo));
             
-            if (ipInfo.city) {
-                addCityToDropdown(ipInfo.city);
-                setUserCity(ipInfo.city);
-            }
+            // Set the city in the form
+            setUserCity(ipInfo.city);
             return ipInfo;
         } catch (error) {
             console.error('Error fetching IP info:', error);
@@ -120,12 +118,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const city = citySelect.value;
 
         showLoading();
-        collapseForm(); // Collapse form when fetching recipe
+        collapseForm();
         
         try {
             // Get IP info from localStorage
-            const ipInfo = JSON.parse(localStorage.getItem('ipInfo')) || await initializeIPInfo();
-            if (!ipInfo) {
+            const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
+            if (!ipInfo || !ipInfo.ip) {
                 throw new Error('Could not determine IP address');
             }
 

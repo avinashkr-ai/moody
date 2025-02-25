@@ -27,7 +27,7 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     cred = credentials.Certificate(credentials_dict)
 else:
     # Development: use local file
-    cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
+    cred = credentials.Certificate('etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://cursorai-af01e-default-rtdb.firebaseio.com/'
@@ -118,7 +118,7 @@ def generate_recipe_with_ai(mood, age, city):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', ipinfo_token=os.getenv('IPINFO_TOKEN'))
 
 @app.route('/my-recipes')
 def my_recipes():
@@ -131,12 +131,11 @@ def get_recipe():
         mood = data.get('mood')
         age = data.get('age')
         city = data.get('city')
+        user_ip = data.get('ip')  # Get IP from request data
         
-        # Log headers and IP info for debugging
-        print("Request Headers:", dict(request.headers))
-        user_ip = get_client_ip()
-        print(f"Detected IP: {user_ip}")
-        
+        if not user_ip:
+            raise Exception("IP address not provided")
+            
         # Format IP for Firebase (replace dots with underscores)
         formatted_ip = user_ip.replace('.', '_')
         
@@ -168,26 +167,6 @@ def get_my_recipes(ip):
         recipes_ref = db.reference(f'/{ip}')
         recipes = recipes_ref.get()
         return jsonify(recipes or {})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/get-ip')
-def get_ip():
-    try:
-        ipinfo_token = os.getenv('IPINFO_TOKEN')
-        client_ip = get_client_ip()
-        
-        # Use the detected client IP with ipinfo
-        response = requests.get(f'https://ipinfo.io/{client_ip}/json?token={ipinfo_token}')
-        if response.status_code == 200:
-            data = response.json()
-            return jsonify({
-                'ip': client_ip,  # Use the detected IP
-                'region': data.get('region'),
-                'city': data.get('city'),
-                'country': data.get('country')
-            })
-        raise Exception("Failed to fetch IP info")
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
