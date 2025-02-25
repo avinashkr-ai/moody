@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: mood-recipe-recommender
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: IPINFO_TOKEN
+        sync: false 
