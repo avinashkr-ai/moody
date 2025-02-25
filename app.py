@@ -27,7 +27,7 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     cred = credentials.Certificate(credentials_dict)
 else:
     # Development: use local file
-    cred = credentials.Certificate('etc/secrets/adminsdk-py.json')
+    cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://cursorai-af01e-default-rtdb.firebaseio.com/'
@@ -102,19 +102,43 @@ def generate_recipe_with_ai(mood, age, city):
             if response_text.startswith('json'):
                 response_text = response_text[4:].strip()
             response_text = response_text.strip()
-        
-        # Parse the cleaned JSON
-        recipe_data = json.loads(response_text)
+
+        # Fix common JSON formatting issues
+        try:
+            # First attempt to parse as is
+            recipe_data = json.loads(response_text)
+        except json.JSONDecodeError:
+            # If parsing fails, try to fix common issues
+            # 1. Fix missing commas between properties
+            response_text = response_text.replace('"\n"', '",\n"')
+            # 2. Add missing commas after closing quotes before new properties
+            response_text = response_text.replace('"\n', '",\n')
+            # 3. Remove any trailing commas
+            response_text = response_text.replace(',\n}', '\n}')
+            response_text = response_text.replace(',}', '}')
+            
+            # Try parsing again
+            recipe_data = json.loads(response_text)
         
         # Ensure prepTime is a string
         if isinstance(recipe_data.get('prepTime'), int):
             recipe_data['prepTime'] = f"{recipe_data['prepTime']} minutes"
+        
+        # Validate required fields
+        required_fields = ['name', 'prepTime', 'ingredients', 'instructions', 'mood']
+        missing_fields = [field for field in required_fields if field not in recipe_data]
+        if missing_fields:
+            raise ValueError(f"Missing required fields: {', '.join(missing_fields)}")
         
         return json.dumps(recipe_data)
     except json.JSONDecodeError as e:
         print(f"JSON parsing error: {e}")
         print(f"Response text: {response_text}")
         raise Exception("Failed to generate valid recipe format")
+    except Exception as e:
+        print(f"Error processing recipe: {str(e)}")
+        print(f"Response text: {response_text}")
+        raise Exception(f"Failed to process recipe: {str(e)}")
 
 @app.route('/')
 def index():
