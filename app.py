@@ -39,17 +39,25 @@ model = genai.GenerativeModel('gemini-pro')
 
 def get_client_ip():
     try:
-        # Call ipify API to get the real public IP
-        response = requests.get('https://api64.ipify.org?format=json')
-        if response.status_code == 200:
-            return response.json()['ip']
+        # First try to get IP from X-Forwarded-For header
+        x_forwarded_for = request.headers.get('X-Forwarded-For')
+        if x_forwarded_for:
+            # Get the first IP in the list (client's original IP)
+            client_ip = x_forwarded_for.split(',')[0].strip()
+            return client_ip
+            
+        # Then try X-Real-IP header
+        x_real_ip = request.headers.get('X-Real-IP')
+        if x_real_ip:
+            return x_real_ip
+            
+        # If running locally, use remote_addr
+        return request.remote_addr
+        
     except Exception as e:
-        print(f"Error fetching IP from ipify: {e}")
-    
-    # Fallback to request headers if API fails
-    if request.headers.getlist("X-Forwarded-For"):
-        return request.headers.getlist("X-Forwarded-For")[0]
-    return request.remote_addr
+        print(f"Error getting client IP: {e}")
+        # Fallback to remote_addr if all else fails
+        return request.remote_addr
 
 def generate_recipe_with_ai(mood, age, city):
     prompt = f"""Generate an Indian recipe suitable for someone who is:
@@ -124,28 +132,33 @@ def get_recipe():
         age = data.get('age')
         city = data.get('city')
         
+        # Log headers and IP info for debugging
+        print("Request Headers:", dict(request.headers))
+        user_ip = get_client_ip()
+        print(f"Detected IP: {user_ip}")
+        
+        # Format IP for Firebase (replace dots with underscores)
+        formatted_ip = user_ip.replace('.', '_')
+        
         # Generate recipe using AI
         recipe_json = generate_recipe_with_ai(mood, age, city)
-        recipe = json.loads(recipe_json)  # Parse JSON string to dict
+        recipe = json.loads(recipe_json)
         
         # Add creation timestamp (in IST)
         ist = pytz.timezone('Asia/Kolkata')
         current_time = datetime.now(ist)
         recipe['created_at'] = current_time.strftime("%Y-%m-%d %I:%M %p")
         
-        # Get user's IP and format it
-        user_ip = get_client_ip().replace('.', '_')
-        
         # Create a unique recipe ID
         new_recipe_id = f'recipe_{uuid.uuid4().hex[:8]}'
         
         # Save to Firebase under user's IP and mood
-        recipe_ref = db.reference(f'/{user_ip}/{mood}')
+        recipe_ref = db.reference(f'/{formatted_ip}/{mood}')
         recipe_ref.child(new_recipe_id).set(recipe)
         
         return jsonify(recipe)
     except Exception as e:
-        print(f"Error: {str(e)}")  # For debugging
+        print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/my-recipes/<ip>')
@@ -162,11 +175,14 @@ def get_my_recipes(ip):
 def get_ip():
     try:
         ipinfo_token = os.getenv('IPINFO_TOKEN')
-        response = requests.get(f'https://ipinfo.io/json?token={ipinfo_token}')
+        client_ip = get_client_ip()
+        
+        # Use the detected client IP with ipinfo
+        response = requests.get(f'https://ipinfo.io/{client_ip}/json?token={ipinfo_token}')
         if response.status_code == 200:
             data = response.json()
             return jsonify({
-                'ip': data.get('ip'),
+                'ip': client_ip,  # Use the detected IP
                 'region': data.get('region'),
                 'city': data.get('city'),
                 'country': data.get('country')
