@@ -30,13 +30,8 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     credentials_dict = json.loads(credentials_json)
     cred = credentials.Certificate(credentials_dict)
 else:
-    # Determine the environment
-    if os.getenv("GAE_APPLICATION"):
-        # Running on Google App Engine
-        cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
-    else:
-        # Running locally
-        cred = credentials.Certificate('etc/secrets/adminsdk-py.json')
+    # Development: use local file
+    cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://cursorai-af01e-default-rtdb.firebaseio.com/'
