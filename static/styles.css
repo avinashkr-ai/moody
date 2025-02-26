@@ -334,7 +334,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav-link.active {
     font-weight: 500;
-    color: #0d6efd !important;
 }
 
 .nav-link:after {
@@ -344,7 +343,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: #0d6efd;
+    background-color: #FF9500 !important;
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
@@ -399,7 +398,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #formToggleContainer .btn:hover {
-    background-color: #0d6efd;
+    background-color: #FF9500;
     color: white;
     transform: translateY(2px);
 }

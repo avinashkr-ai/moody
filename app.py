@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_cors import CORS
 import firebase_admin
 from firebase_admin import credentials, db
@@ -12,12 +12,16 @@ import json
 from datetime import datetime
 import pytz
 import base64
+from flask_caching import Cache
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Configure Flask-Caching
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 # Initialize Firebase
 if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
@@ -27,7 +31,7 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     cred = credentials.Certificate(credentials_dict)
 else:
     # Development: use local file
-    cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
+    cred = credentials.Certificate('etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://cursorai-af01e-default-rtdb.firebaseio.com/'
@@ -41,6 +45,25 @@ model = genai.GenerativeModel('gemini-2.0-flash')
 hit_count_ref = db.reference('/hit_count')
 if hit_count_ref.get() is None:
     hit_count_ref.set(0)
+
+# Get a reference to the Firebase Realtime Database
+firebase_db = db
+
+# Environment variables
+IPINFO_TOKEN = os.getenv("IPINFO_TOKEN")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Function to get Firebase configuration values from environment variables
+def get_firebase_config():
+    return {
+        "apiKey": os.getenv("FIREBASE_API_KEY"),
+        "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+        "databaseURL": os.getenv("FIREBASE_DATABASE_URL"),
+        "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+        "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+        "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+        "appId": os.getenv("FIREBASE_APP_ID")
+    }
 
 def get_client_ip():
     try:
@@ -147,11 +170,23 @@ def generate_recipe_with_ai(mood, age, city):
 
 @app.route('/')
 def index():
-    return render_template('index.html', ipinfo_token=os.getenv('IPINFO_TOKEN'))
+    ipinfo_token = IPINFO_TOKEN
+
+    # Fetch feedback data from Firebase
+    feedback_ref = firebase_db.reference('feedback')
+    feedback_data = feedback_ref.get()
+
+    # Convert feedback data to a list
+    feedback_list = []
+    if feedback_data:
+        for key, value in feedback_data.items():
+            feedback_list.append(value)
+
+    return render_template('index.html', ipinfo_token=ipinfo_token, feedback_list=feedback_list, **get_firebase_config())
 
 @app.route('/my-recipes')
 def my_recipes():
-    return render_template('my_recipes.html')
+    return render_template('my_recipes.html', **get_firebase_config())
 
 @app.route('/api/recipe', methods=['POST'])
 def get_recipe():
@@ -220,6 +255,77 @@ def update_hit_count():
     except Exception as e:
         print(f"Error updating hit count: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/feedback')
+def feedback():
+    firebase_config = get_firebase_config()
+    return render_template('feedback.html', **firebase_config)
+
+@app.route('/api/get-ip')
+def get_ip():
+    ip_address = request.headers.get('X-Real-IP', request.remote_addr)
+    response = requests.get(f'https://ipinfo.io/{ip_address}?token={IPINFO_TOKEN}')
+    data = response.json()
+    return jsonify(data)
+
+@app.route('/api/save-recipe', methods=['POST'])
+def save_recipe():
+    try:
+        data = request.get_json()
+        mood = data.get('mood')
+        recipe = data.get('recipe')
+        user_ip = data.get('user_ip')
+        user_city = data.get('user_city')
+
+        if not all([mood, recipe, user_ip, user_city]):
+            return jsonify({"error": "Missing parameters"}), 400
+
+        # Replace dots with underscores in user_ip
+        user_ip = user_ip.replace('.', '_')
+
+        # Get a reference to the "recipes" node in the Firebase Realtime Database
+        recipes_ref = firebase_db.reference('recipes')
+
+        # Get a reference to the user's recipes node
+        user_recipes_ref = recipes_ref.child(user_ip)
+
+        # Push the recipe to the user's recipes node
+        new_recipe_ref = user_recipes_ref.push({
+            'mood': mood,
+            'recipe': recipe,
+            'user_city': user_city,
+            'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        print(f"Error saving recipe: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/save-feedback', methods=['POST'])
+def save_feedback():
+    try:
+        data = request.get_json()
+        rating = data.get('rating')
+        comment = data.get('comment')
+        client_ip = data.get('clientIP')
+
+        if not all([rating, comment, client_ip]):
+            return jsonify({"error": "Missing parameters"}), 400
+
+        # Save feedback to Firebase
+        feedback_ref = firebase_db.reference('feedback')
+        feedback_ref.push({
+            'rating': rating,
+            'comment': comment,
+            'client_ip': client_ip,
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        print(f"Error saving feedback: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     debug_mode = os.getenv('FLASK_DEBUG', '0') == '1'

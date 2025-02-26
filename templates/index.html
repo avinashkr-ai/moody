@@ -12,6 +12,34 @@
         const IPINFO_TOKEN = '{{ ipinfo_token }}';
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <style>
+        .carousel-inner {
+            display: flex;
+        }
+
+        .carousel-item {
+            margin-right: 0;
+            flex: 0 0 100%/3;
+            display: none;
+            transition: transform 0.5s ease; /* Add transition for smooth effect */
+        }
+
+        .carousel-item.active,
+        .carousel-item.active + .carousel-item,
+        .carousel-item.active + .carousel-item + .carousel-item {
+            display: block;
+        }
+
+        .carousel-item.active {
+            transform: scale(1.1); /* Make the active item larger */
+            z-index: 1; /* Ensure the active item is on top */
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
     <div class="container py-5">
@@ -28,7 +56,10 @@
                             <i class="fas fa-home me-1"></i> Home
                         </a>
                         <a class="nav-link fs-5" href="/my-recipes">
-                            <i class="fas fa-utensils me-1"></i>My Recipes
+                            <i class="fas fa-utensils me-1"></i> My Recipes
+                        </a>
+                        <a class="nav-link fs-5" href="/feedback">
+                            <i class="fas fa-comment me-1"></i> Feedback
                         </a>
                     </div>
                     <span class="navbar-text me-2" id="userIP">
@@ -139,6 +170,35 @@
         </div>
     </div>
 
+    <hr>
+
+    <!-- Feedback Carousel -->
+    <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for feedback in feedback_list %}
+            <div class="carousel-item">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Rating: {{ feedback.rating }} / 5</h5>
+                        <p class="card-text">{{ feedback.comment }}</p>
+                        <footer class="blockquote-footer">
+                            From: {{ feedback.client_ip }}, {{ feedback.timestamp }}
+                        </footer>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
     <footer class="footer-59391 mt-auto py-3 bg-light">
         <div class="container">
             <div class="row">
@@ -156,6 +216,46 @@
     </footer>
 
     <!-- Add Bootstrap JS bundle -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var items = $('.carousel-item');
+            var numItems = items.length;
+
+            // Initialize carousel
+            items.each(function(i) {
+                if (i < 3) {
+                    $(this).show();
+                }
+            });
+
+            $('.carousel-control-next').click(function() {
+                var active = $('.carousel-item.active');
+                var next = active.next();
+                var prev = active.prev();
+
+                if (next.length === 0) {
+                    next = $('.carousel-item:first');
+                }
+
+                active.removeClass('active');
+                next.addClass('active');
+            });
+
+            $('.carousel-control-prev').click(function() {
+                var active = $('.carousel-item.active');
+                var next = active.next();
+                var prev = active.prev();
+
+                if (prev.length === 0) {
+                    prev = $('.carousel-item:last');
+                }
+
+                active.removeClass('active');
+                prev.addClass('active');
+            });
+        });
+    </script>
 </body>
 </html> 

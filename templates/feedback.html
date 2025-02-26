@@ -3,13 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Recipes - Moody Bomb</title>
+    <title>Feedback - Moody Bomb</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .rating {
+            display: inline-block;
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            float: right;
+            color: #ddd;
+            font-size: 2.5em;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .rating label:hover,
+        .rating label:hover ~ label,
+        .rating input:checked ~ label {
+            color: #FFD700;
+        }
+    </style>
 </head>
 <body>
-    <div class="container py-4 py-md-5">
+    <div class="container py-5">
         <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
             <div class="container-fluid">
                 <a class="navbar-brand fs-4" href="/">Moody Bomb</a>
@@ -22,10 +45,10 @@
                         <a class="nav-link fs-5" href="/">
                             <i class="fas fa-home me-1"></i> Home
                         </a>
-                        <a class="nav-link active fs-5" href="/my-recipes">
+                        <a class="nav-link fs-5" href="/my-recipes">
                             <i class="fas fa-utensils me-1"></i> My Recipes
                         </a>
-                        <a class="nav-link fs-5" href="/feedback">
+                        <a class="nav-link active fs-5" href="/feedback">
                             <i class="fas fa-comment me-1"></i> Feedback
                         </a>
                     </div>
@@ -39,19 +62,27 @@
             </div>
         </nav>
 
-        <h1 class="text-center mb-4 mb-md-5">My Recipe History</h1>
-        
-        <!-- Add loading spinner -->
-        <div id="loadingSpinner" class="text-center mb-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+        <h1 class="text-center mb-4">Feedback</h1>
+
+        <form id="feedbackForm">
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating:</label>
+                <div class="rating">
+                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars">☆</label>
+                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">☆</label>
+                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">☆</label>
+                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">☆</label>
+                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">☆</label>
+                </div>
             </div>
-            <p class="mt-2">Loading your recipes...</p>
-        </div>
-        
-        <div id="recipesContainer" class="row g-3 g-md-4" style="display: none;">
-            <!-- Recipes will be populated here -->
-        </div>
+
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment:</label>
+                <textarea class="form-control" id="comment" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
     </div>
 
     <footer class="footer-59391 mt-auto py-3 bg-light">
@@ -70,8 +101,7 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='my_recipes.js') }}"></script>
-    <!-- Add Bootstrap JS bundle -->
+    <script src="{{ url_for('static', filename='feedback.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 
