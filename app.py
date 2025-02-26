@@ -35,7 +35,7 @@ firebase_admin.initialize_app(cred, {
 
 # Initialize Gemini
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # Initialize hit count
 hit_count_ref = db.reference('/hit_count')
