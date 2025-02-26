@@ -103,32 +103,38 @@ document.addEventListener('DOMContentLoaded', function() {
         col.className = 'col-12 col-sm-6 col-lg-4';
         
         col.innerHTML = `
-            <div class="card h-100">
-                <div class="card-body" style="background: linear-gradient(to bottom, var(--bg-light), var(--bg-off-white));">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge bg-primary">${mood}</span>
-                        <div>
-                            ${recipe.created_at ? 
-                                `<small class="text-muted">${recipe.created_at}</small>` 
-                                : ''}
-                            ${recipe.user_city ? 
-                                `<small class="text-muted">, ${recipe.user_city}</small>` 
-                                : ''}
+            <div class="card h-100 glass-effect">
+                <div class="card-header-gradient">
+                    <h5 class="card-title mb-0 text-white">${recipe.name}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-bolt me-1"></i> ${mood}
+                        </span>
+                        <div class="text-end">
+                            <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>${recipe.created_at}</small><br>
+                            <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>${recipe.user_city}</small>
                         </div>
                     </div>
-                    <h5 class="card-title mb-3" style="color: var(--orange-gradient-mid);"><i class="fas fa-cookie me-1"></i> ${recipe.name}</h5>
-                    <p class="card-text"><strong>Prep Time:</strong> ${recipe.prepTime}</p>
+                    
+                    <p class="card-text mb-3"><i class="far fa-clock me-2"></i><strong>Prep Time:</strong> ${recipe.prepTime}</p>
                     
                     <div class="recipe-details">
-                        <h6 class="mb-2">Ingredients:</h6>
+                        <h6 class="mb-2"><i class="fas fa-carrot me-2"></i>Ingredients:</h6>
                         <ul class="list-group list-group-flush mb-3">
-                            ${recipe.ingredients.map(ingredient => 
-                                `<li class="list-group-item px-0"><i class="fas fa-check-circle me-1"></i> ${ingredient}</li>`
-                            ).join('')}
+                            ${recipe.ingredients.map(ingredient => `
+                                <li class="list-group-item px-0 ingredient-item">
+                                    <span class="ingredient-quantity">1 cup</span>
+                                    <span>${ingredient}</span>
+                                </li>
+                            `).join('')}
                         </ul>
                         
-                        <h6 class="mb-2">Instructions:</h6>
-                        <p class="card-text" style="white-space: pre-line"><i class="fas fa-book me-1"></i> ${recipe.instructions}</p>
+                        <h6 class="mb-2"><i class="fas fa-clipboard-list me-2"></i>Instructions:</h6>
+                        <div class="instruction-block">
+                            ${recipe.instructions}
+                        </div>
                     </div>
                 </div>
             </div>
