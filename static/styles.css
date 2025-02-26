@@ -24,7 +24,7 @@ body {
     display: flex;
     flex-direction: column;
     color: var(--text-dark);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
 }
 
 h1, h2, h3, h4, h5, h6 {

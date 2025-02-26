@@ -245,8 +245,8 @@ def update_hit_count():
         # Get current hit count
         current_hit_count = hit_count_ref.get() or 0
 
-        # Increase hit count by 2
-        new_hit_count = current_hit_count + 2
+        # Increase hit count by 1
+        new_hit_count = current_hit_count + 1
 
         # Update hit count in Firebase
         hit_count_ref.set(new_hit_count)
