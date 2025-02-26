@@ -214,7 +214,29 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
             if (ipInfo && ipInfo.ip) {
-                userIPSpan.textContent = `IP: ${ipInfo.ip}`;
+                const targetIP = ipInfo.ip;
+                let currentIP = [0, 0, 0, 0];
+
+                function animateIP() {
+                    let ipString = currentIP.join('.');
+                    userIPSpan.textContent = `IP: ${ipString}`;
+
+                    if (ipString !== targetIP) {
+                        let targetOctets = targetIP.split('.').map(Number);
+
+                        for (let i = 0; i < 4; i++) {
+                            if (currentIP[i] < targetOctets[i]) {
+                                currentIP[i]++;
+                            }
+                        }
+
+                        setTimeout(animateIP, 10); // Adjust the timeout for speed
+                    } else {
+                        userIPSpan.textContent = `IP: ${targetIP}`;
+                    }
+                }
+
+                animateIP();
             } else {
                 userIPSpan.textContent = 'IP: Not found';
             }
@@ -233,7 +255,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             const data = await response.json();
-            hitCountSpan.textContent = data.hit_count;
+            const finalHitCount = data.hit_count;
+            let currentHitCount = parseInt(hitCountSpan.textContent) || 0;
+
+            function animateHitCount() {
+                if (currentHitCount < finalHitCount) {
+                    currentHitCount++;
+                    hitCountSpan.textContent = currentHitCount;
+                    setTimeout(animateHitCount, 10); // Adjust the timeout for speed
+                } else {
+                    hitCountSpan.textContent = finalHitCount; // Ensure final value
+                }
+            }
+
+            animateHitCount();
         } catch (error) {
             console.error('Error updating hit count:', error);
         }

@@ -1,5 +1,27 @@
+:root {
+    --orange-gradient-start: #FF9500;
+    --orange-gradient-mid: #FF5F1F;
+    --orange-gradient-end: #FF3A00;
+    --light-orange: #FFF0E6;
+    --dark-orange: #CC4B00;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --bg-light: #FFFFFF;
+    --bg-off-white: #F9F9F9;
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-medium: rgba(0, 0, 0, 0.1);
+}
+
 body {
-    background-color: #f8f9fa;
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-dark);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--orange-gradient-mid);
 }
 
 .mood-selector {
@@ -9,6 +31,8 @@ body {
 .card {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    color: var(--text-dark);
+    background-color: var(--bg-off-white);
 }
 
 .card:hover {
@@ -44,7 +68,7 @@ body {
 }
 
 .text-muted {
-    color: #6c757d !important;
+    color: var(--text-light) !important;
 }
 
 .card .text-muted small {
@@ -409,6 +433,7 @@ body {
     margin-right: 1rem;
     font-size: 1.1rem;
     font-weight: 500;
+    color: var(--orange-gradient-start);
 }
 
 /* Mobile adjustments */
@@ -416,4 +441,99 @@ body {
     .navbar-text {
         font-size: 1rem;
     }
+}
+
+.footer-59391 {
+    padding: 1rem 0;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-align: center;
+}
+
+.mt-auto {
+    margin-top: auto !important;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid var(--light-orange);
+    transition: border-color 0.3s ease;
+    color: var(--text-dark);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--orange-gradient-mid);
+    box-shadow: 0 0 0 0.2rem rgba(255, 95, 31, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--orange-gradient-start), var(--orange-gradient-end));
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to right, var(--orange-gradient-end), var(--orange-gradient-start));
+}
+
+.btn-primary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 58, 0, 0.5);
+}
+
+.navbar-light .navbar-brand {
+    color: var(--orange-gradient-mid);
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--orange-gradient-start);
+    transition: color 0.3s ease;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: var(--orange-gradient-mid);
+}
+
+.navbar-light .navbar-nav .nav-link.active {
+    color: var(--orange-gradient-mid) !important;
+}
+
+.fa-home,
+.fa-utensils,
+.fa-linkedin,
+.fa-github {
+    color: var(--orange-gradient-start); /* Initial color */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.fa-home:hover,
+.fa-utensils:hover,
+.fa-linkedin:hover,
+.fa-github:hover {
+    color: var(--orange-gradient-end); /* Color on hover */
+}
+
+/* General link styles */
+a {
+    color: var(--orange-gradient-start); /* Default link color */
+    text-decoration: none; /* Remove underlines */
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+}
+
+a:hover {
+    color: var(--orange-gradient-mid); /* Hover color */
+}
+
+/* Active link state (if applicable, e.g., for current page) */
+a.active {
+    color: var(--orange-gradient-end); /* Active color */
+}
+
+/* Style for links inside the footer */
+.footer-59391 a {
+    color: var(--orange-gradient-start); /* Adjust color for footer links */
+}
+
+.footer-59391 a:hover {
+    color: var(--orange-gradient-start); /* Adjust hover color for footer links */
 } 

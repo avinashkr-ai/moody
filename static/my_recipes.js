@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         col.innerHTML = `
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-body" style="background: linear-gradient(to bottom, var(--bg-light), var(--bg-off-white));">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <span class="badge bg-primary">${mood}</span>
                         <div>
@@ -116,19 +116,19 @@ document.addEventListener('DOMContentLoaded', function() {
                                 : ''}
                         </div>
                     </div>
-                    <h5 class="card-title mb-3">${recipe.name}</h5>
+                    <h5 class="card-title mb-3" style="color: var(--orange-gradient-mid);"><i class="fas fa-cookie me-1"></i> ${recipe.name}</h5>
                     <p class="card-text"><strong>Prep Time:</strong> ${recipe.prepTime}</p>
                     
                     <div class="recipe-details">
                         <h6 class="mb-2">Ingredients:</h6>
                         <ul class="list-group list-group-flush mb-3">
                             ${recipe.ingredients.map(ingredient => 
-                                `<li class="list-group-item px-0">${ingredient}</li>`
+                                `<li class="list-group-item px-0"><i class="fas fa-check-circle me-1"></i> ${ingredient}</li>`
                             ).join('')}
                         </ul>
                         
                         <h6 class="mb-2">Instructions:</h6>
-                        <p class="card-text" style="white-space: pre-line">${recipe.instructions}</p>
+                        <p class="card-text" style="white-space: pre-line"><i class="fas fa-book me-1"></i> ${recipe.instructions}</p>
                     </div>
                 </div>
             </div>
@@ -141,7 +141,30 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
             if (ipInfo && ipInfo.ip) {
-                userIPSpan.textContent = `IP: ${ipInfo.ip}`;
+                const targetIP = ipInfo.ip;
+                const userIPSpan = document.getElementById('userIP');
+                let currentIP = [0, 0, 0, 0];
+
+                function animateIP() {
+                    let ipString = currentIP.join('.');
+                    userIPSpan.textContent = `IP: ${ipString}`;
+
+                    if (ipString !== targetIP) {
+                        let targetOctets = targetIP.split('.').map(Number);
+
+                        for (let i = 0; i < 4; i++) {
+                            if (currentIP[i] < targetOctets[i]) {
+                                currentIP[i]++;
+                            }
+                        }
+
+                        setTimeout(animateIP, 10); // Adjust the timeout for speed
+                    } else {
+                        userIPSpan.textContent = `IP: ${targetIP}`;
+                    }
+                }
+
+                animateIP();
             } else {
                 userIPSpan.textContent = 'IP: Not found';
             }
@@ -160,7 +183,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             const data = await response.json();
-            hitCountSpan.textContent = data.hit_count;
+            const finalHitCount = data.hit_count;
+            let currentHitCount = parseInt(hitCountSpan.textContent) || 0;
+
+            function animateHitCount() {
+                if (currentHitCount < finalHitCount) {
+                    currentHitCount++;
+                    hitCountSpan.textContent = currentHitCount;
+                    setTimeout(animateHitCount, 10); // Adjust the timeout for speed
+                } else {
+                    hitCountSpan.textContent = finalHitCount; // Ensure final value
+                }
+            }
+
+            animateHitCount();
         } catch (error) {
             console.error('Error updating hit count:', error);
         }
