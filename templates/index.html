@@ -3,43 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood Recipe Recommender</title>
+    <title>Mood Recipe Recommender | Personalized Recipes Based on Your Mood</title>
+    <meta name="description" content="Get personalized Indian recipes based on your mood, age, and location. Discover recipes that match how you feel today.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.2/collection/components/icon/svg/fast-food-outline.svg">
+    
+    <!-- Stylesheets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
     <script>
         // Get IPINFO_TOKEN from environment
         const IPINFO_TOKEN = '{{ ipinfo_token }}';
     </script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
-    <div class="container py-5">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container py-4 py-md-5">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand fs-4" href="/">Mood Recipes</a>
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-utensils me-2"></i>Mood Recipes
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <div class="navbar-nav me-auto">
-                        <a class="nav-link active fs-5" href="/">Home</a>
-                        <a class="nav-link fs-5" href="/my-recipes">My Recipes</a>
+                        <a class="nav-link active" href="/">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                        <a class="nav-link" href="/my-recipes">
+                            <i class="fas fa-book me-1"></i>My Recipes
+                        </a>
                     </div>
-                    <span class="navbar-text me-2" id="userIP">
-                        Loading IP...
+                    <span class="navbar-text me-3" id="userIP">
+                        <i class="fas fa-globe-asia me-1"></i> Locating...
                     </span>
                     <span class="navbar-text">
-                        Hits: <span id="hitCount">0</span>
+                        <i class="fas fa-chart-line me-1"></i> Hits: <span id="hitCount">0</span>
                     </span>
                 </div>
             </div>
         </nav>
 
-        <h1 class="text-center mb-5">How are you feeling today?</h1>
+        <!-- Main Content -->
+        <div class="text-center mb-5">
+            <h1 class="page-title">How are you feeling today?</h1>
+            <p class="text-muted mb-0">Get personalized Indian recipes based on your current mood</p>
+        </div>
         
-        <div class="mood-selector mb-5">
+        <!-- Recipe Form -->
+        <div class="mood-selector mb-5 glass-effect">
             <div class="row justify-content-center">
                 <div class="col-12">
                     <div class="text-center mb-3" id="formToggleContainer" style="display: none;">
@@ -53,57 +78,71 @@
                             <div class="row align-items-center">
                                 <!-- Mood Select -->
                                 <div class="col-12 col-md-4">
-                                    <select id="moodSelect" class="form-select" required>
-                                        <option value="" selected disabled>Select your mood</option>
-                                        <option value="happy">Happy</option>
-                                        <option value="sad">Sad</option>
-                                        <option value="stressed">Stressed</option>
-                                        <option value="energetic">Energetic</option>
-                                        <option value="tired">Tired</option>
-                                    </select>
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <select id="moodSelect" class="form-select" required>
+                                            <option value="" selected disabled>Select your mood</option>
+                                            <option value="happy">Happy</option>
+                                            <option value="sad">Sad</option>
+                                            <option value="stressed">Stressed</option>
+                                            <option value="energetic">Energetic</option>
+                                            <option value="tired">Tired</option>
+                                        </select>
+                                        <label for="moodSelect">Your Mood</label>
+                                        <div class="help-text">How are you feeling right now?</div>
+                                    </div>
                                 </div>
                                 
                                 <!-- Age Input -->
                                 <div class="col-12 col-md-3 mt-2 mt-md-0">
-                                    <input type="number" id="ageInput" class="form-control" 
-                                           placeholder="Age (5-100)" min="5" max="100" required>
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <input type="number" id="ageInput" class="form-control" 
+                                               placeholder="Age" min="5" max="100" required>
+                                        <label for="ageInput">Age (5-100)</label>
+                                        <div class="help-text">Recipes will be age-appropriate</div>
+                                    </div>
                                 </div>
                                 
                                 <!-- City Select -->
                                 <div class="col-12 col-md-3 mt-2 mt-md-0">
-                                    <select id="citySelect" class="form-select" required>
-                                        <option value="" selected disabled>Select city</option>
-                                        <!-- Major Indian cities -->
-                                        <option value="Ahmedabad">Ahmedabad</option>
-                                        <option value="Bangalore">Bangalore</option>
-                                        <option value="Bhopal">Bhopal</option>
-                                        <option value="Chandigarh">Chandigarh</option>
-                                        <option value="Chennai">Chennai</option>
-                                        <option value="Coimbatore">Coimbatore</option>
-                                        <option value="Delhi">Delhi</option>
-                                        <option value="Gurgaon">Gurgaon</option>
-                                        <option value="Hyderabad">Hyderabad</option>
-                                        <option value="Indore">Indore</option>
-                                        <option value="Jaipur">Jaipur</option>
-                                        <option value="Kochi">Kochi</option>
-                                        <option value="Kolkata">Kolkata</option>
-                                        <option value="Lucknow">Lucknow</option>
-                                        <option value="Mumbai">Mumbai</option>
-                                        <option value="Nagpur">Nagpur</option>
-                                        <option value="Noida">Noida</option>
-                                        <option value="Patna">Patna</option>
-                                        <option value="Pune">Pune</option>
-                                        <option value="Surat">Surat</option>
-                                        <option value="Thane">Thane</option>
-                                        <option value="Vadodara">Vadodara</option>
-                                        <option value="Visakhapatnam">Visakhapatnam</option>
-                                        <!-- User's city will be added here if not in list -->
-                                    </select>
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <select id="citySelect" class="form-select" required>
+                                            <option value="" selected disabled>Select city</option>
+                                            <!-- Major Indian cities -->
+                                            <option value="Ahmedabad">Ahmedabad</option>
+                                            <option value="Bangalore">Bangalore</option>
+                                            <option value="Bhopal">Bhopal</option>
+                                            <option value="Chandigarh">Chandigarh</option>
+                                            <option value="Chennai">Chennai</option>
+                                            <option value="Coimbatore">Coimbatore</option>
+                                            <option value="Delhi">Delhi</option>
+                                            <option value="Gurgaon">Gurgaon</option>
+                                            <option value="Hyderabad">Hyderabad</option>
+                                            <option value="Indore">Indore</option>
+                                            <option value="Jaipur">Jaipur</option>
+                                            <option value="Kochi">Kochi</option>
+                                            <option value="Kolkata">Kolkata</option>
+                                            <option value="Lucknow">Lucknow</option>
+                                            <option value="Mumbai">Mumbai</option>
+                                            <option value="Nagpur">Nagpur</option>
+                                            <option value="Noida">Noida</option>
+                                            <option value="Patna">Patna</option>
+                                            <option value="Pune">Pune</option>
+                                            <option value="Surat">Surat</option>
+                                            <option value="Thane">Thane</option>
+                                            <option value="Vadodara">Vadodara</option>
+                                            <option value="Visakhapatnam">Visakhapatnam</option>
+                                            <!-- User's city will be added here if not in list -->
+                                        </select>
+                                        <label for="citySelect">Your City</label>
+                                        <div class="help-text">For local ingredients & styles</div>
+                                    </div>
                                 </div>
 
                                 <!-- Submit Button -->
                                 <div class="col-12 col-md-2 mt-3 mt-md-0">
-                                    <button type="submit" class="btn btn-primary w-100">Get Recipe</button>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-utensils me-2"></i>Get Recipe
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -112,30 +151,56 @@
             </div>
         </div>
 
+        <!-- Loading Animation -->
         <div id="loadingSpinner" class="text-center mb-4" style="display: none;">
-            <div class="spinner-border text-primary" role="status">
+            <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2">Creating the perfect recipe for your mood...</p>
+            <p class="mt-3 fs-5">Creating the perfect recipe for your mood...</p>
+            <div class="progress mt-3" style="height: 6px; max-width: 300px; margin: 0 auto;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                     style="width: 75%;"></div>
+            </div>
         </div>
 
-        <div id="recipeCard" class="card mx-auto" style="max-width: 600px; display: none;">
+        <!-- Recipe Card -->
+        <div id="recipeCard" class="card mx-auto glass-effect" style="max-width: 650px; display: none;">
+            <div class="card-header-gradient">
+                <h2 class="card-title mb-0 text-white" id="recipeName"></h2>
+            </div>
             <div class="card-body">
-                <h2 class="card-title" id="recipeName"></h2>
-                <p class="card-text"><strong>Prep Time:</strong> <span id="prepTime"></span></p>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="card-text mb-0"><i class="far fa-clock me-2"></i><strong>Prep Time:</strong> <span id="prepTime"></span></p>
+                    <span class="badge bg-secondary">
+                        <i class="fas fa-tag me-1"></i><span class="mood-badge-text">Personalized for You</span>
+                    </span>
+                </div>
                 
-                <h5>Ingredients:</h5>
-                <ul id="ingredients" class="list-group list-group-flush mb-3"></ul>
+                <h5 class="mb-3"><i class="fas fa-carrot me-2"></i>Ingredients:</h5>
+                <ul id="ingredients" class="list-group list-group-flush mb-4"></ul>
                 
-                <h5>Instructions:</h5>
-                <p id="instructions" class="card-text"></p>
+                <h5 class="mb-3"><i class="fas fa-clipboard-list me-2"></i>Instructions:</h5>
+                <div id="instructions" class="card-text mb-4"></div>
                 
-                <button id="newRecipeBtn" class="btn btn-primary">Get Another Recipe</button>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="/my-recipes" class="btn btn-outline-primary">
+                        <i class="fas fa-book me-2"></i>My Recipe Collection
+                    </a>
+                    <button id="newRecipeBtn" class="btn btn-primary">
+                        <i class="fas fa-sync-alt me-2"></i>Get Another Recipe
+                    </button>
+                </div>
+            </div>
+            <div class="card-footer text-center text-muted py-3">
+                <small><i class="fas fa-info-circle me-1"></i> All recipes are generated using AI based on your mood, age, and location</small>
             </div>
         </div>
     </div>
 
+    <!-- Toast container for notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
     <!-- Add Bootstrap JS bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>
