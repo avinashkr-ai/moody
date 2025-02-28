@@ -8,17 +8,20 @@
     --text-light: #666666;
     --bg-light: #f8f9fa;
     --bg-off-white: #f0f2f5;
-    --shadow-light: rgba(0, 0, 0, 0.1); /* Increased shadow intensity */
-    --shadow-medium: rgba(0, 0, 0, 0.2); /* Increased shadow intensity */
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.2);
     --gradient-header: linear-gradient(45deg, var(--orange-gradient-start), var(--orange-gradient-mid), var(--orange-gradient-end));
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
     --space-md: 1rem;
     --space-lg: 1.5rem;
     --space-xl: 2rem;
-    --border-radius: 0.75rem; /* Increased border-radius */
-    --font-primary: 'Poppins', sans-serif; /* Use a modern, readable font */
-    --font-icon: 'Font Awesome 6 Free'; /* Set Font Awesome as icon font */
+    --border-radius: 0.75rem;
+    --font-primary: 'Poppins', sans-serif;
+    --font-icon: 'Font Awesome 6 Free';
+    --instruction-bg: #f9f9f9;
+    --instruction-color: #555;
+    --servings-color: var(--orange-gradient-mid);
 }
 
 /* Import Poppins font */
@@ -30,10 +33,10 @@ body {
     display: flex;
     flex-direction: column;
     color: var(--text-dark);
-    font-family: var(--font-primary) !important; /* Apply primary font */
+    font-family: var(--font-primary) !important;
     font-weight: 400;
     line-height: 1.6;
-    -webkit-font-smoothing: antialiased; /* Improve font rendering */
+    -webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -77,33 +80,33 @@ h6 {
     transition: all 0.3s ease;
     background-color: var(--bg-light);
     padding: var(--space-md);
-    border-radius: var(--border-radius); /* Apply border-radius */
-    box-shadow: 0 4px 8px var(--shadow-light); /* Apply shadow */
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px var(--shadow-light);
 }
 
 .card {
-    box-shadow: 0 6px 12px var(--shadow-light); /* Apply stronger shadow */
+    box-shadow: 0 6px 12px var(--shadow-light);
     transition: all 0.3s ease;
     color: var(--text-dark);
     background-color: var(--bg-off-white);
-    border-radius: var(--border-radius); /* Apply border-radius */
-    border: none; /* Remove default border */
+    border-radius: var(--border-radius);
+    border: none;
 }
 
 .card:hover {
-    box-shadow: 0 8px 16px var(--shadow-medium); /* Apply stronger shadow on hover */
-    transform: translateY(-4px); /* Slight lift on hover */
+    box-shadow: 0 8px 16px var(--shadow-medium);
+    transform: translateY(-4px);
 }
 
 #recipeCard {
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Added transform transition */
-    transform: translateY(20px); /* Start slightly below */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px);
 }
 
 #recipeCard.show {
     opacity: 1;
-    transform: translateY(0); /* Move to original position */
+    transform: translateY(0);
 }
 
 #loadingSpinner {
@@ -149,7 +152,7 @@ h6 {
 .form-content {
     transition: all 0.3s ease;
     padding: var(--space-md);
-    border-radius: var(--border-radius); /* Apply border-radius */
+    border-radius: var(--border-radius);
 }
 
 #formToggleContainer {
@@ -163,7 +166,7 @@ h6 {
 
 .btn-outline-primary {
     transition: all 0.2s ease;
-    border-radius: var(--border-radius); /* Apply border-radius */
+    border-radius: var(--border-radius);
     border-width: 2px;
 }
 
@@ -192,7 +195,7 @@ h6 {
 .form-content .btn {
     height: 42px;
     font-size: 1rem;
-    border-radius: var(--border-radius); /* Apply border-radius */
+    border-radius: var(--border-radius);
 }
 
 /* Responsive adjustments */
@@ -376,9 +379,12 @@ h6 {
 /* Badge styling */
 .badge {
     padding: 0.5em 0.8em;
-    border-radius: var(--border-radius); /* Apply border-radius */
+    border-radius: var(--border-radius);
     font-weight: 500;
     font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 /* Container padding adjustments */
@@ -403,16 +409,16 @@ h6 {
 
 /* Navbar styles */
 .navbar {
-    padding: 0.75rem 1rem; /* Increased padding */
-    border-radius: var(--border-radius); /* Apply border-radius */
-    box-shadow: 0 2px 4px var(--shadow-light); /* Apply shadow */
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px var(--shadow-light);
 }
 
 .navbar-brand {
-    font-weight: 700; /* Increased font-weight */
+    font-weight: 700;
     color: var(--orange-gradient-mid) !important;
-    font-size: 1.75rem !important; /* Increased font-size */
-    text-shadow: 1px 1px 2px var(--shadow-light); /* Added text shadow */
+    font-size: 1.75rem !important;
+    text-shadow: 1px 1px 2px var(--shadow-light);
 }
 
 .nav-link {
@@ -420,7 +426,7 @@ h6 {
     margin: 0 10px;
     transition: color 0.3s ease;
     font-weight: 500;
-    font-size: 1.1rem; /* Increased font-size */
+    font-size: 1.1rem;
 }
 
 .nav-link.active {
@@ -431,11 +437,11 @@ h6 {
     content: '';
     position: absolute;
     width: 100%;
-    height: 3px; /* Increased height */
+    height: 3px;
     bottom: 0;
     left: 0;
     background-color: var(--orange-gradient-start) !important;
-    border-radius: 3px; /* Apply border-radius */
+    border-radius: 3px;
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
@@ -465,7 +471,7 @@ h6 {
     .navbar-toggler {
         padding: 0.25rem 0.5rem;
         font-size: 1rem;
-        border-radius: var(--border-radius); /* Apply border-radius */
+        border-radius: var(--border-radius);
     }
 
     .navbar-toggler:focus {
@@ -475,20 +481,20 @@ h6 {
 
 /* Form toggle button styles */
 #formToggleContainer .btn {
-    width: 40px; /* Increased width */
-    height: 40px; /* Increased height */
+    width: 40px;
+    height: 40px;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border-width: 2px;
     transition: all 0.3s ease;
-    border-radius: 50%; /* Make it fully circular */
-    box-shadow: 0 2px 4px var(--shadow-light); /* Apply shadow */
+    border-radius: 50%;
+    box-shadow: 0 2px 4px var(--shadow-light);
 }
 
 #formToggleContainer .fas {
-    font-size: 1.1rem; /* Increased font-size */
+    font-size: 1.1rem;
     transition: transform 0.3s ease;
 }
 
@@ -496,7 +502,7 @@ h6 {
     background-color: var(--orange-gradient-start);
     color: white;
     transform: translateY(2px);
-    box-shadow: 0 4px 8px var(--shadow-medium); /* Apply stronger shadow on hover */
+    box-shadow: 0 4px 8px var(--shadow-medium);
 }
 
 #formToggleContainer .btn:hover .fa-chevron-down {
@@ -525,11 +531,11 @@ h6 {
 }
 
 .navbar-text {
-    margin-right: 1.25rem; /* Increased margin */
-    font-size: 1.2rem; /* Increased font-size */
-    font-weight: 600; /* Increased font-weight */
+    margin-right: 1.25rem;
+    font-size: 1.2rem;
+    font-weight: 600;
     color: var(--orange-gradient-start);
-    text-shadow: 1px 1px 2px var(--shadow-light); /* Added text shadow */
+    text-shadow: 1px 1px 2px var(--shadow-light);
 }
 
 /* Mobile adjustments */
@@ -544,9 +550,9 @@ h6 {
     background-color: var(--bg-light);
     color: #777;
     text-align: center;
-    border-radius: var(--border-radius); /* Apply border-radius */
-    margin-top: var(--space-xl); /* Increased margin-top */
-    box-shadow: 0 -2px 4px var(--shadow-light); /* Apply shadow */
+    border-radius: var(--border-radius);
+    margin-top: var(--space-xl);
+    box-shadow: 0 -2px 4px var(--shadow-light);
 }
 
 .mt-auto {
@@ -556,9 +562,9 @@ h6 {
 .form-control,
 .form-select {
     border: 2px solid var(--light-orange);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     color: var(--text-dark);
-    border-radius: var(--border-radius); /* Apply border-radius */
+    border-radius: var(--border-radius);
 }
 
 .form-control:focus,
@@ -570,9 +576,9 @@ h6 {
 .btn-primary {
     background: var(--gradient-header);
     border: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; /* Added box-shadow and transform transition */
-    border-radius: var(--border-radius); /* Apply border-radius */
-    box-shadow: 0 4px 8px var(--shadow-light); /* Apply shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px var(--shadow-light);
     font-weight: 500;
     padding: 0.75rem 1.5rem;
     font-size: 1.1rem;
@@ -580,8 +586,8 @@ h6 {
 
 .btn-primary:hover {
     background: linear-gradient(45deg, #f57c00, #e65100, #d84315);
-    box-shadow: 0 6px 12px var(--shadow-medium); /* Apply stronger shadow on hover */
-    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0 6px 12px var(--shadow-medium);
+    transform: translateY(-2px);
 }
 
 .btn-primary:focus {
@@ -610,31 +616,35 @@ h6 {
 .fa-utensils,
 .fa-linkedin,
 .fa-github,
-.fa-comment {
+.fa-comment,
+.fas,
+.far {
     color: var(--orange-gradient-start);
-    transition: color 0.3s ease, transform 0.3s ease; /* Added transform transition */
-    font-size: 1.2rem; /* Increased font-size */
+    transition: color 0.3s ease, transform 0.3s ease;
+    font-size: 1.2rem;
 }
 
 .fa-home:hover,
 .fa-utensils:hover,
 .fa-linkedin:hover,
 .fa-github:hover,
-.fa-comment:hover {
+.fa-comment:hover,
+.fas:hover,
+.far:hover {
     color: var(--orange-gradient-end);
-    transform: scale(1.1); /* Slight enlargement on hover */
+    transform: scale(1.1);
 }
 
 /* General link styles */
 a {
     color: var(--orange-gradient-start);
     text-decoration: none;
-    transition: color 0.3s ease, text-shadow 0.3s ease; /* Added text-shadow transition */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 a:hover {
     color: var(--orange-gradient-mid);
-    text-shadow: 1px 1px 2px var(--shadow-light); /* Added text shadow on hover */
+    text-shadow: 1px 1px 2px var(--shadow-light);
 }
 
 /* Active link state (if applicable, e.g., for current page) */
@@ -655,16 +665,16 @@ a.active {
 /* Recipe Card Styles */
 .glass-effect {
     background: rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius); /* Apply border-radius */
-    box-shadow: 0 6px 12px var(--shadow-light); /* Apply shadow */
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 12px var(--shadow-light);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease; /* Add a smooth transition for all properties */
+    transition: all 0.3s ease;
 }
 
 .glass-effect:hover {
-    transform: translateY(-5px); /* Move the card up slightly */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance the shadow */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card-header-gradient {
@@ -673,7 +683,7 @@ a.active {
     padding: var(--space-lg) var(--space-xl);
     position: relative;
     overflow: hidden;
-    border-radius: var(--border-radius) var(--border-radius) 0 0; /* Rounded top corners */
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 .card-header-gradient h2 {
@@ -681,7 +691,7 @@ a.active {
     font-weight: 700;
     margin: 0;
     letter-spacing: -0.02em;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Add a subtle text shadow */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .card-header-gradient::after {
@@ -710,6 +720,10 @@ a.active {
 }
 
 /* Recipe Details Styles */
+.recipe-details {
+    margin-top: var(--space-md);
+}
+
 .recipe-details h6 {
     color: var(--orange-gradient-mid);
     font-weight: 600;
@@ -727,10 +741,76 @@ a.active {
 .ingredient-quantity {
     font-weight: 500;
     color: #555;
+    margin-right: var(--space-sm);
+}
+
+/* added ingredient list color and space */
+.ingredient-item span:first-child {
+    color: var(--servings-color);
+    margin-right: 0.5rem;
+}
+
+.servings-number {
+    color: var(--servings-color);
+    /* Added to only color the number */
 }
 
 .instruction-block {
     line-height: 1.6;
-    color: #444;
-    border-radius: var(--border-radius); /* Apply border-radius */
+    color: var(--instruction-color);
+    background-color: var(--instruction-bg);
+    border-radius: var(--border-radius);
+    /* set the instruction overflow design */
+    padding: 0.75rem;
+    overflow-y: scroll;
+    max-height: 200px;
+    /* scrollbar-width: thin; */
+    /* scrollbar-color: var(--orange-gradient-mid) var(--bg-light); */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px #FF9500;
+}
+
+/* always show scroll */
+.instruction-block::-webkit-scrollbar {
+    width: 8px;
+}
+
+.instruction-block::-webkit-scrollbar-track {
+    background: var(--bg-light);
+    border-radius: 4px;
+}
+
+.instruction-block::-webkit-scrollbar-thumb {
+    background-color: var(--orange-gradient-mid);
+    border-radius: 4px;
+    border: 1px solid var(--bg-light);
+}
+
+/* Enhance code readibilty  */
+.card-body {
+    padding: var(--space-md);
+}
+
+.d-flex {
+    align-items: center;
+}
+
+.card-title {
+    margin-bottom: var(--space-sm);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    /* increase icon badge  */
+}
+
+.badge i {
+    font-size: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: var(--space-md);
 }

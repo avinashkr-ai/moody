@@ -1,8 +1,16 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const recipesContainer = document.getElementById('recipesContainer');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const hitCountSpan = document.getElementById('hitCount');
     const userIPSpan = document.getElementById('userIP');
+
+    const moodIcons = {
+        happy: 'fa-smile',
+        sad: 'fa-frown',
+        stressed: 'fa-meh',
+        energetic: 'fa-bolt',
+        tired: 'fa-bed'
+    };
 
     function showLoading() {
         loadingSpinner.style.display = 'block';
@@ -26,10 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // If not in localStorage, fetch from API
             const response = await fetch('/api/get-ip');
             const ipInfo = await response.json();
-            
+
             // Store in localStorage
             localStorage.setItem('ipInfo', JSON.stringify(ipInfo));
-            
+
             return ipInfo.ip.replace(/\./g, '_');
         } catch (error) {
             console.error('Error fetching IP:', error);
@@ -39,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function fetchMyRecipes() {
         showLoading();
-        
+
         try {
             const userIP = await getClientIP();
             if (!userIP) {
@@ -63,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayRecipes(recipes) {
         recipesContainer.innerHTML = '';
-        
+
         if (!recipes || Object.keys(recipes).length === 0) {
             recipesContainer.innerHTML = `
                 <div class="col-12 text-center">
@@ -79,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
             moodSection.className = 'col-12 mb-4';
             moodSection.innerHTML = `
                 <h3 class="mb-3">
+                    <i class="fas ${moodIcons[mood]} me-2"></i>
                     <span class="badge bg-secondary">${mood.charAt(0).toUpperCase() + mood.slice(1)} Mood</span>
                 </h3>
                 <div class="row g-3 g-md-4" id="mood-${mood}">
@@ -101,7 +110,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function createRecipeCard(recipe, mood) {
         const col = document.createElement('div');
         col.className = 'col-12 col-sm-6 col-lg-4';
-        
+
+        let instructionsWithBreaks = recipe.instructions.replace(/(\d+\. )/g, '<br>$1');
+        // Remove the first <br> if it exists, only if there is content after it
+        if (instructionsWithBreaks.startsWith('<br>')) {
+            instructionsWithBreaks = instructionsWithBreaks.slice(4);
+        }
+
         col.innerHTML = `
             <div class="card h-100 glass-effect">
                 <div class="card-header-gradient">
@@ -110,39 +125,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <span class="badge bg-secondary">
-                            <i class="fas fa-bolt me-1"></i> ${mood}
+                            <i class="fas ${moodIcons[mood]} me-1"></i> ${mood.charAt(0).toUpperCase() + mood.slice(1)}
                         </span>
                         <div class="text-end">
                             <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>${recipe.created_at}</small><br>
                             <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>${recipe.user_city}</small>
                         </div>
                     </div>
-                    
+
                     <p class="card-text mb-3"><i class="far fa-clock me-2"></i><strong>Prep Time:</strong> ${recipe.prepTime}</p>
-                    
+
                     <div class="recipe-details">
                         <h6 class="mb-2"><i class="fas fa-carrot me-2"></i>Ingredients:</h6>
                         <ul class="list-group list-group-flush mb-3">
                             ${recipe.ingredients.map(ingredient => `
-                                <li class="list-group-item px-0 ingredient-item">
-                                    <span class="ingredient-quantity">1 cup</span>
+                                <li class="list-group-item px-2 ingredient-item">
                                     <span>${ingredient}</span>
                                 </li>
                             `).join('')}
                         </ul>
-                        
+
                         <h6 class="mb-2"><i class="fas fa-clipboard-list me-2"></i>Instructions:</h6>
                         <div class="instruction-block">
-                            ${recipe.instructions}
+                            ${instructionsWithBreaks}
                         </div>
                     </div>
                 </div>
             </div>
         `;
-        
+
         return col;
     }
-
     async function updateUserIP() {
         try {
             const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
@@ -214,4 +227,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fetch recipes when page loads
     fetchMyRecipes();
-}); 
+});
