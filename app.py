@@ -178,15 +178,25 @@ def index():
 
     # Convert feedback data to a list and ensure rating is an integer
     feedback_list = []
+    total_rating = 0
+    num_ratings = 0
+
     if feedback_data:
         for key, value in feedback_data.items():
             try:
-                value['rating'] = int(value.get('rating', 0))  # Convert rating to int, default to 0 if missing
+                rating = int(value.get('rating', 0))  # Convert rating to int, default to 0 if missing
             except ValueError:
-                value['rating'] = 0  # If conversion fails, set to 0
+                rating = 0  # If conversion fails, set to 0
+            
+            value['rating'] = rating
             feedback_list.append(value)
+            total_rating += rating
+            num_ratings += 1
 
-    return render_template('index.html', ipinfo_token=ipinfo_token, feedback_list=feedback_list, **get_firebase_config())
+    # Calculate average rating
+    average_rating = total_rating / num_ratings if num_ratings > 0 else 0
+
+    return render_template('index.html', ipinfo_token=ipinfo_token, feedback_list=feedback_list, average_rating=average_rating, **get_firebase_config())
 
 @app.route('/my-recipes')
 def my_recipes():

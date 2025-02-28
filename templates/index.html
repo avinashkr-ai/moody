@@ -181,35 +181,40 @@
     </div>
 
 
-    <!-- Feedback Carousel -->
-    <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            {% for feedback in feedback_list %}
-            <div class="carousel-item">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <div class="star-rating">
-                            <i class="fas fa-star"></i> &nbsp;{{ feedback.rating }}/5
-                        </div>
-                        <p class="card-text">{{ feedback.comment }}</p>
-                        <footer>
-                            {{ feedback.timestamp }}
-                        </footer>
-                    </div>
+   <!-- Feedback Carousel -->
+   <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for feedback in feedback_list %}
+        <div class="carousel-item">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <!-- Ratting -->
+                        <span class="star-rating">
+                            {% for i in range(feedback.rating) %}
+                            <i class="fas fa-star"></i>
+                            {% endfor %}
+                        </span>
+                        {{ feedback.rating }}/5
+                    </h5>
+                    <p class="card-text">{{ feedback.comment }}</p>
+                    <footer>
+                        {{ feedback.timestamp }}
+                    </footer>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+        {% endfor %}
     </div>
-
+    <button class="carousel-control-prev" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#feedbackCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
     <footer class="footer-59391 mt-auto py-3 bg-light">
         <div class="container">
             <div class="row">
