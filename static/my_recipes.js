@@ -86,10 +86,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const moodSection = document.createElement('div');
             moodSection.className = 'col-12 mb-4';
             moodSection.innerHTML = `
-                <h3 class="mb-3">
+                <h2 class="moodSectionTitle mb-3">
                     <i class="fas ${moodIcons[mood]} me-2"></i>
                     <span class="badge bg-secondary">${mood.charAt(0).toUpperCase() + mood.slice(1)} Mood</span>
-                </h3>
+                </h2>
                 <div class="row g-3 g-md-4" id="mood-${mood}">
                 </div>
             `;
