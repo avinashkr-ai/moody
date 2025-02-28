@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,18 +22,21 @@
             margin-right: 0;
             flex: 0 0 100%/3;
             display: none;
-            transition: transform 0.5s ease; /* Add transition for smooth effect */
+            transition: transform 0.5s ease;
+            /* Add transition for smooth effect */
         }
 
         .carousel-item.active,
-        .carousel-item.active + .carousel-item,
-        .carousel-item.active + .carousel-item + .carousel-item {
+        .carousel-item.active+.carousel-item,
+        .carousel-item.active+.carousel-item+.carousel-item {
             display: block;
         }
 
         .carousel-item.active {
-            transform: scale(1.1); /* Make the active item larger */
-            z-index: 1; /* Ensure the active item is on top */
+            transform: scale(1.1);
+            /* Make the active item larger */
+            z-index: 1;
+            /* Ensure the active item is on top */
         }
 
         .card {
@@ -41,13 +45,14 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container py-5">
         <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
             <div class="container-fluid">
                 <a class="navbar-brand fs-4" href="/">Moody Bomb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -73,16 +78,17 @@
         </nav>
 
         <h1 class="text-center mb-5">How are you feeling today?</h1>
-        
+
         <div class="mood-selector mb-5">
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <div class="text-center mb-3 d-flex justify-content-center" id="formToggleContainer" style="display: none;">
+                    <div class="text-center mb-3 d-flex justify-content-center" id="formToggleContainer"
+                        style="display: none;">
                         <button class="btn btn-outline-success btn-sm rounded-circle" id="toggleFormBtn">
                             <i class="fas fa-chevron-down"></i>
                         </button>
                     </div>
-                    
+
                     <form id="recipeForm" class="needs-validation" novalidate>
                         <div class="form-content">
                             <div class="row align-items-center">
@@ -97,13 +103,13 @@
                                         <option value="tired">Tired</option>
                                     </select>
                                 </div>
-                                
+
                                 <!-- Age Input -->
                                 <div class="col-12 col-md-3 mt-2 mt-md-0">
-                                    <input type="number" id="ageInput" class="form-control" 
-                                           placeholder="Age (5-100)" min="5" max="100" required>
+                                    <input type="number" id="ageInput" class="form-control" placeholder="Age (5-100)"
+                                        min="5" max="100" required>
                                 </div>
-                                
+
                                 <!-- City Select -->
                                 <div class="col-12 col-md-3 mt-2 mt-md-0">
                                     <select id="citySelect" class="form-select" required>
@@ -158,13 +164,13 @@
             <div class="card-body">
                 <h2 class="card-title" id="recipeName"></h2>
                 <p class="card-text"><strong>Prep Time:</strong> <span id="prepTime"></span></p>
-                
+
                 <h5>Ingredients:</h5>
                 <ul id="ingredients" class="list-group list-group-flush mb-3"></ul>
-                
+
                 <h5>Instructions:</h5>
                 <p id="instructions" class="card-text"></p>
-                
+
                 <button id="newRecipeBtn" class="btn btn-primary">Get Another Recipe</button>
             </div>
         </div>
@@ -206,8 +212,10 @@
                     <div class="copyright">
                         <p>
                             <small>Copyright 2025. All Rights Reserved.</small><br>
-                            <a href="http://github.com/rock12231" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
-                            <a href="https://www.linkedin.com/in/rock1223/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+                            <a href="http://github.com/rock12231" target="_blank" rel="noopener noreferrer"><i
+                                    class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/rock1223/" target="_blank"
+                                rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
                         </p>
                     </div>
                 </div>
@@ -219,18 +227,18 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var items = $('.carousel-item');
             var numItems = items.length;
 
             // Initialize carousel
-            items.each(function(i) {
+            items.each(function (i) {
                 if (i < 3) {
                     $(this).show();
                 }
             });
 
-            $('.carousel-control-next').click(function() {
+            $('.carousel-control-next').click(function () {
                 var active = $('.carousel-item.active');
                 var next = active.next();
                 var prev = active.prev();
@@ -243,7 +251,7 @@
                 next.addClass('active');
             });
 
-            $('.carousel-control-prev').click(function() {
+            $('.carousel-control-prev').click(function () {
                 var active = $('.carousel-item.active');
                 var next = active.next();
                 var prev = active.prev();
@@ -258,4 +266,5 @@
         });
     </script>
 </body>
-</html> 
+
+</html>

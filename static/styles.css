@@ -8,15 +8,21 @@
     --text-light: #666666;
     --bg-light: #f8f9fa;
     --bg-off-white: #f0f2f5;
-    --shadow-light: rgba(0, 0, 0, 0.05);
-    --shadow-medium: rgba(0, 0, 0, 0.1);
+    --shadow-light: rgba(0, 0, 0, 0.1); /* Increased shadow intensity */
+    --shadow-medium: rgba(0, 0, 0, 0.2); /* Increased shadow intensity */
     --gradient-header: linear-gradient(45deg, var(--orange-gradient-start), var(--orange-gradient-mid), var(--orange-gradient-end));
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
     --space-md: 1rem;
     --space-lg: 1.5rem;
     --space-xl: 2rem;
+    --border-radius: 0.75rem; /* Increased border-radius */
+    --font-primary: 'Poppins', sans-serif; /* Use a modern, readable font */
+    --font-icon: 'Font Awesome 6 Free'; /* Set Font Awesome as icon font */
 }
+
+/* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 body {
     background-color: var(--bg-off-white);
@@ -24,39 +30,80 @@ body {
     display: flex;
     flex-direction: column;
     color: var(--text-dark);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-family: var(--font-primary) !important; /* Apply primary font */
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased; /* Improve font rendering */
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--orange-gradient-mid);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: var(--space-sm);
+}
+
+/* Enhanced Typography */
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+}
+
+h6 {
+    font-size: 1rem;
 }
 
 .mood-selector {
     transition: all 0.3s ease;
     background-color: var(--bg-light);
     padding: var(--space-md);
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: var(--border-radius); /* Apply border-radius */
+    box-shadow: 0 4px 8px var(--shadow-light); /* Apply shadow */
 }
 
 .card {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px var(--shadow-light); /* Apply stronger shadow */
     transition: all 0.3s ease;
     color: var(--text-dark);
     background-color: var(--bg-off-white);
+    border-radius: var(--border-radius); /* Apply border-radius */
+    border: none; /* Remove default border */
 }
 
 .card:hover {
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px var(--shadow-medium); /* Apply stronger shadow on hover */
+    transform: translateY(-4px); /* Slight lift on hover */
 }
 
 #recipeCard {
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Added transform transition */
+    transform: translateY(20px); /* Start slightly below */
 }
 
 #recipeCard.show {
     opacity: 1;
+    transform: translateY(0); /* Move to original position */
 }
 
 #loadingSpinner {
@@ -68,6 +115,7 @@ h1, h2, h3, h4, h5, h6 {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -101,7 +149,7 @@ h1, h2, h3, h4, h5, h6 {
 .form-content {
     transition: all 0.3s ease;
     padding: var(--space-md);
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius); /* Apply border-radius */
 }
 
 #formToggleContainer {
@@ -115,10 +163,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-outline-primary {
     transition: all 0.2s ease;
+    border-radius: var(--border-radius); /* Apply border-radius */
+    border-width: 2px;
 }
 
 /* Add animation for chevron icon */
-.fa-chevron-down, .fa-chevron-up {
+.fa-chevron-down,
+.fa-chevron-up {
     transition: transform 0.3s ease;
 }
 
@@ -132,7 +183,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Add these styles */
 .form-content .row {
-    margin: 0;  /* Remove default row margin */
+    margin: 0;
+    /* Remove default row margin */
 }
 
 .form-content .form-select,
@@ -140,10 +192,12 @@ h1, h2, h3, h4, h5, h6 {
 .form-content .btn {
     height: 42px;
     font-size: 1rem;
+    border-radius: var(--border-radius); /* Apply border-radius */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+
     /* Reduce font sizes */
     body {
         font-size: 14px;
@@ -215,12 +269,12 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     /* Form elements */
-    .form-content .row > div {
+    .form-content .row>div {
         margin-bottom: 0.5rem;
         padding: 0 4px;
     }
-    
-    .form-content .row > div:last-child {
+
+    .form-content .row>div:last-child {
         margin-bottom: 0;
     }
 
@@ -322,6 +376,9 @@ h1, h2, h3, h4, h5, h6 {
 /* Badge styling */
 .badge {
     padding: 0.5em 0.8em;
+    border-radius: var(--border-radius); /* Apply border-radius */
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 /* Container padding adjustments */
@@ -330,13 +387,15 @@ h1, h2, h3, h4, h5, h6 {
         padding-left: 12px;
         padding-right: 12px;
     }
-    
+
     .row {
         margin-left: -8px;
         margin-right: -8px;
     }
-    
-    .col-12, .col-sm-6, .col-lg-4 {
+
+    .col-12,
+    .col-sm-6,
+    .col-lg-4 {
         padding-left: 8px;
         padding-right: 8px;
     }
@@ -344,32 +403,39 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Navbar styles */
 .navbar {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem; /* Increased padding */
+    border-radius: var(--border-radius); /* Apply border-radius */
+    box-shadow: 0 2px 4px var(--shadow-light); /* Apply shadow */
 }
 
 .navbar-brand {
-    font-weight: bold;
+    font-weight: 700; /* Increased font-weight */
     color: var(--orange-gradient-mid) !important;
+    font-size: 1.75rem !important; /* Increased font-size */
+    text-shadow: 1px 1px 2px var(--shadow-light); /* Added text shadow */
 }
 
 .nav-link {
     position: relative;
     margin: 0 10px;
     transition: color 0.3s ease;
+    font-weight: 500;
+    font-size: 1.1rem; /* Increased font-size */
 }
 
 .nav-link.active {
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .nav-link:after {
     content: '';
     position: absolute;
     width: 100%;
-    height: 2px;
+    height: 3px; /* Increased height */
     bottom: 0;
     left: 0;
-    background-color: #FF9500 !important;
+    background-color: var(--orange-gradient-start) !important;
+    border-radius: 3px; /* Apply border-radius */
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
@@ -382,11 +448,11 @@ h1, h2, h3, h4, h5, h6 {
 /* Mobile navbar adjustments */
 @media (max-width: 768px) {
     .navbar-brand {
-        font-size: 1.25rem !important;
+        font-size: 1.5rem !important;
     }
-    
+
     .nav-link {
-        font-size: 1rem !important;
+        font-size: 1.1rem !important;
         margin: 8px 0;
         padding: 0.5rem 1rem;
     }
@@ -399,6 +465,7 @@ h1, h2, h3, h4, h5, h6 {
     .navbar-toggler {
         padding: 0.25rem 0.5rem;
         font-size: 1rem;
+        border-radius: var(--border-radius); /* Apply border-radius */
     }
 
     .navbar-toggler:focus {
@@ -408,25 +475,28 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Form toggle button styles */
 #formToggleContainer .btn {
-    width: 36px;
-    height: 36px;
+    width: 40px; /* Increased width */
+    height: 40px; /* Increased height */
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border-width: 2px;
     transition: all 0.3s ease;
+    border-radius: 50%; /* Make it fully circular */
+    box-shadow: 0 2px 4px var(--shadow-light); /* Apply shadow */
 }
 
 #formToggleContainer .fas {
-    font-size: 0.9rem;
+    font-size: 1.1rem; /* Increased font-size */
     transition: transform 0.3s ease;
 }
 
 #formToggleContainer .btn:hover {
-    background-color: #FF9500;
+    background-color: var(--orange-gradient-start);
     color: white;
     transform: translateY(2px);
+    box-shadow: 0 4px 8px var(--shadow-medium); /* Apply stronger shadow on hover */
 }
 
 #formToggleContainer .btn:hover .fa-chevron-down {
@@ -442,29 +512,30 @@ h1, h2, h3, h4, h5, h6 {
     #formToggleContainer {
         margin: 0.75rem 0;
     }
-    
+
     #formToggleContainer .btn {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
         border-width: 1.5px;
     }
-    
+
     #formToggleContainer .fas {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 }
 
 .navbar-text {
-    margin-right: 1rem;
-    font-size: 1.1rem;
-    font-weight: 500;
+    margin-right: 1.25rem; /* Increased margin */
+    font-size: 1.2rem; /* Increased font-size */
+    font-weight: 600; /* Increased font-weight */
     color: var(--orange-gradient-start);
+    text-shadow: 1px 1px 2px var(--shadow-light); /* Added text shadow */
 }
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
     .navbar-text {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 }
 
@@ -473,6 +544,9 @@ h1, h2, h3, h4, h5, h6 {
     background-color: var(--bg-light);
     color: #777;
     text-align: center;
+    border-radius: var(--border-radius); /* Apply border-radius */
+    margin-top: var(--space-xl); /* Increased margin-top */
+    box-shadow: 0 -2px 4px var(--shadow-light); /* Apply shadow */
 }
 
 .mt-auto {
@@ -482,8 +556,9 @@ h1, h2, h3, h4, h5, h6 {
 .form-control,
 .form-select {
     border: 2px solid var(--light-orange);
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
     color: var(--text-dark);
+    border-radius: var(--border-radius); /* Apply border-radius */
 }
 
 .form-control:focus,
@@ -495,11 +570,18 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary {
     background: var(--gradient-header);
     border: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; /* Added box-shadow and transform transition */
+    border-radius: var(--border-radius); /* Apply border-radius */
+    box-shadow: 0 4px 8px var(--shadow-light); /* Apply shadow */
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
 }
 
 .btn-primary:hover {
     background: linear-gradient(45deg, #f57c00, #e65100, #d84315);
+    box-shadow: 0 6px 12px var(--shadow-medium); /* Apply stronger shadow on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
 }
 
 .btn-primary:focus {
@@ -523,40 +605,47 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--orange-gradient-mid) !important;
 }
 
+/* Iconic Styling */
 .fa-home,
 .fa-utensils,
 .fa-linkedin,
-.fa-github {
-    color: var(--orange-gradient-start); /* Initial color */
-    transition: color 0.3s ease; /* Smooth transition for hover effect */
+.fa-github,
+.fa-comment {
+    color: var(--orange-gradient-start);
+    transition: color 0.3s ease, transform 0.3s ease; /* Added transform transition */
+    font-size: 1.2rem; /* Increased font-size */
 }
 
 .fa-home:hover,
 .fa-utensils:hover,
 .fa-linkedin:hover,
-.fa-github:hover {
-    color: var(--orange-gradient-end); /* Color on hover */
+.fa-github:hover,
+.fa-comment:hover {
+    color: var(--orange-gradient-end);
+    transform: scale(1.1); /* Slight enlargement on hover */
 }
 
 /* General link styles */
 a {
-    color: var(--orange-gradient-start); /* Default link color */
-    text-decoration: none; /* Remove underlines */
-    transition: color 0.3s ease; /* Smooth transition for color changes */
+    color: var(--orange-gradient-start);
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Added text-shadow transition */
 }
 
 a:hover {
-    color: var(--orange-gradient-mid); /* Hover color */
+    color: var(--orange-gradient-mid);
+    text-shadow: 1px 1px 2px var(--shadow-light); /* Added text shadow on hover */
 }
 
 /* Active link state (if applicable, e.g., for current page) */
 a.active {
-    color: var(--orange-gradient-end); /* Active color */
+    color: var(--orange-gradient-end);
 }
 
 /* Style for links inside the footer */
 .footer-59391 a {
     color: var(--orange-gradient-mid);
+    transition: color 0.3s ease;
 }
 
 .footer-59391 a:hover {
@@ -566,10 +655,16 @@ a.active {
 /* Recipe Card Styles */
 .glass-effect {
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius); /* Apply border-radius */
+    box-shadow: 0 6px 12px var(--shadow-light); /* Apply shadow */
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease; /* Add a smooth transition for all properties */
+}
+
+.glass-effect:hover {
+    transform: translateY(-5px); /* Move the card up slightly */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance the shadow */
 }
 
 .card-header-gradient {
@@ -578,6 +673,7 @@ a.active {
     padding: var(--space-lg) var(--space-xl);
     position: relative;
     overflow: hidden;
+    border-radius: var(--border-radius) var(--border-radius) 0 0; /* Rounded top corners */
 }
 
 .card-header-gradient h2 {
@@ -585,6 +681,7 @@ a.active {
     font-weight: 700;
     margin: 0;
     letter-spacing: -0.02em;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Add a subtle text shadow */
 }
 
 .card-header-gradient::after {
@@ -602,9 +699,11 @@ a.active {
     0% {
         left: -100%;
     }
+
     20% {
         left: 100%;
     }
+
     100% {
         left: 100%;
     }
@@ -633,4 +732,5 @@ a.active {
 .instruction-block {
     line-height: 1.6;
     color: #444;
-} 
+    border-radius: var(--border-radius); /* Apply border-radius */
+}
