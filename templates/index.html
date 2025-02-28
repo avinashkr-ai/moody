@@ -14,29 +14,28 @@
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <style>
+        /* Carousel Adjustments */
+        #feedbackCarousel {
+            max-width: 300px;
+            height: 160px;
+            margin: 0 auto;
+        }
+
         .carousel-inner {
             display: flex;
+            justify-content: center; /* Center items horizontally */
         }
 
         .carousel-item {
             margin-right: 0;
-            flex: 0 0 100%/3;
+            flex: 0 0 100%;
+            /* Each item takes full width */
             display: none;
             transition: transform 0.5s ease;
-            /* Add transition for smooth effect */
-        }
-
-        .carousel-item.active,
-        .carousel-item.active+.carousel-item,
-        .carousel-item.active+.carousel-item+.carousel-item {
-            display: block;
         }
 
         .carousel-item.active {
-            transform: scale(1.1);
-            /* Make the active item larger */
-            z-index: 1;
-            /* Ensure the active item is on top */
+            display: block;
         }
 
         .card {
@@ -82,26 +81,21 @@
         <div class="mood-selector mb-5">
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <div class="text-center mb-3 d-flex justify-content-center" id="formToggleContainer"
-                        style="display: none;">
-                        <button class="btn btn-outline-success btn-sm rounded-circle" id="toggleFormBtn">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
-
                     <form id="recipeForm" class="needs-validation" novalidate>
                         <div class="form-content">
                             <div class="row align-items-center">
                                 <!-- Mood Select -->
                                 <div class="col-12 col-md-4">
-                                    <select id="moodSelect" class="form-select" required>
-                                        <option value="" selected disabled>Select your mood</option>
-                                        <option value="happy">Happy</option>
-                                        <option value="sad">Sad</option>
-                                        <option value="stressed">Stressed</option>
-                                        <option value="energetic">Energetic</option>
-                                        <option value="tired">Tired</option>
-                                    </select>
+                                    <div class="input-group">
+                                        <select id="moodSelect" class="form-select" required>
+                                            <option value="" selected disabled>Select your mood</option>
+                                            <option value="happy">Happy </option>
+                                            <option value="sad">Sad</option>
+                                            <option value="stressed">Stressed</option>
+                                            <option value="energetic">Energetic</option>
+                                            <option value="tired">Tired</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <!-- Age Input -->
@@ -144,7 +138,8 @@
 
                                 <!-- Submit Button -->
                                 <div class="col-12 col-md-2 mt-3 mt-md-0">
-                                    <button type="submit" class="btn btn-primary w-100">Get Recipe</button>
+                                    <button type="submit" class="btn btn-primary w-100"><i
+                                            class="fas fa-search me-1"></i> Get Recipe</button>
                                 </div>
                             </div>
                         </div>
@@ -160,23 +155,31 @@
             <p class="mt-2">Creating the perfect recipe for your mood...</p>
         </div>
 
-        <div id="recipeCard" class="card mx-auto" style="max-width: 600px; display: none;">
+        <div id="recipeCard" class="card glass-effect mx-auto" style="max-width: 600px; display: none;">
+            <div class="card-header-gradient">
+                <h5 class="card-title mb-0 text-white" id="recipeName"></h5>
+            </div>
             <div class="card-body">
-                <h2 class="card-title" id="recipeName"></h2>
-                <p class="card-text"><strong>Prep Time:</strong> <span id="prepTime"></span></p>
+                <p class="card-text"><i class="far fa-clock me-2"></i><strong>Prep Time:</strong> <span
+                        id="prepTime"></span></p>
 
                 <h5>Ingredients:</h5>
                 <ul id="ingredients" class="list-group list-group-flush mb-3"></ul>
 
                 <h5>Instructions:</h5>
-                <p id="instructions" class="card-text"></p>
+                <div class="instruction-block" id="instructions"></div>
 
-                <button id="newRecipeBtn" class="btn btn-primary">Get Another Recipe</button>
+
+
+                <div class="d-flex mt-2 justify-content-between">
+                    <button id="newRecipeBtn" class="btn btn-primary"><i class="fas fa-sync me-1"></i> Get Another
+                        Recipe</button>
+                    <a href="/my-recipes" class="btn btn-primary"><i class="fas fa-history me-1"></i> My Recipes</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <hr>
 
     <!-- Feedback Carousel -->
     <div id="feedbackCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -185,10 +188,14 @@
             <div class="carousel-item">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h5 class="card-title">Rating: {{ feedback.rating }} / 5</h5>
+                        <div class="star-rating">
+                            {% for i in range(feedback.rating) %}
+                            <i class="fas fa-star"></i>
+                            {% endfor %}
+                        </div>
                         <p class="card-text">{{ feedback.comment }}</p>
-                        <footer class="blockquote-footer">
-                            From: {{ feedback.client_ip }}, {{ feedback.timestamp }}
+                        <footer>
+                            {{ feedback.timestamp }}
                         </footer>
                     </div>
                 </div>
@@ -232,37 +239,9 @@
             var numItems = items.length;
 
             // Initialize carousel
-            items.each(function (i) {
-                if (i < 3) {
-                    $(this).show();
-                }
-            });
+            $('.carousel-item:first').addClass('active'); // Show only one item initially
 
-            $('.carousel-control-next').click(function () {
-                var active = $('.carousel-item.active');
-                var next = active.next();
-                var prev = active.prev();
-
-                if (next.length === 0) {
-                    next = $('.carousel-item:first');
-                }
-
-                active.removeClass('active');
-                next.addClass('active');
-            });
-
-            $('.carousel-control-prev').click(function () {
-                var active = $('.carousel-item.active');
-                var next = active.next();
-                var prev = active.prev();
-
-                if (prev.length === 0) {
-                    prev = $('.carousel-item:last');
-                }
-
-                active.removeClass('active');
-                prev.addClass('active');
-            });
+            // Only one item needs to be shown, so no need to manipulate any other items
         });
     </script>
 </body>

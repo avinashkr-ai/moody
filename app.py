@@ -31,7 +31,7 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     cred = credentials.Certificate(credentials_dict)
 else:
     # Development: use local file
-    cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
+    cred = credentials.Certificate('etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://cursorai-af01e-default-rtdb.firebaseio.com/'
@@ -176,10 +176,14 @@ def index():
     feedback_ref = firebase_db.reference('feedback')
     feedback_data = feedback_ref.get()
 
-    # Convert feedback data to a list
+    # Convert feedback data to a list and ensure rating is an integer
     feedback_list = []
     if feedback_data:
         for key, value in feedback_data.items():
+            try:
+                value['rating'] = int(value.get('rating', 0))  # Convert rating to int, default to 0 if missing
+            except ValueError:
+                value['rating'] = 0  # If conversion fails, set to 0
             feedback_list.append(value)
 
     return render_template('index.html', ipinfo_token=ipinfo_token, feedback_list=feedback_list, **get_firebase_config())
@@ -329,4 +333,4 @@ def save_feedback():
 
 if __name__ == '__main__':
     debug_mode = os.getenv('FLASK_DEBUG', '0') == '1'
-    app.run(debug=debug_mode) 
+    app.run(debug=debug_mode)

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const recipeForm = document.getElementById('recipeForm');
     const moodSelect = document.getElementById('moodSelect');
     const ageInput = document.getElementById('ageInput');
@@ -10,9 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const instructions = document.getElementById('instructions');
     const newRecipeBtn = document.getElementById('newRecipeBtn');
     const loadingSpinner = document.getElementById('loadingSpinner');
-    const formContent = document.querySelector('.form-content');
-    const formToggleContainer = document.getElementById('formToggleContainer');
-    const toggleFormBtn = document.getElementById('toggleFormBtn');
     const hitCountSpan = document.getElementById('hitCount');
     const userIPSpan = document.getElementById('userIP');
 
@@ -29,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const option = document.createElement('option');
             option.value = city;
             option.textContent = city;
-            
+
             // Insert after the disabled placeholder option
             const placeholder = citySelect.querySelector('option[disabled]');
             placeholder.insertAdjacentElement('afterend', option);
@@ -40,9 +37,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (city) {
             // Add city to dropdown if it doesn't exist
             addCityToDropdown(city);
-            
+
             // Find and select the city option
-            const cityOption = Array.from(citySelect.options).find(option => 
+            const cityOption = Array.from(citySelect.options).find(option =>
                 option.value.toLowerCase() === city.toLowerCase()
             );
 
@@ -71,11 +68,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Fetch new IP info
             const response = await fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`);
             const ipInfo = await response.json();
-            
+
             // Add timestamp and store in localStorage
             ipInfo.timestamp = new Date().toISOString();
             localStorage.setItem('ipInfo', JSON.stringify(ipInfo));
-            
+
             // Set the city in the form
             setUserCity(ipInfo.city);
             return ipInfo;
@@ -95,33 +92,13 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingSpinner.style.display = 'none';
     }
 
-    function collapseForm() {
-        formContent.style.display = 'none';
-        formToggleContainer.style.display = 'block';
-        toggleFormBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
-    }
-
-    function expandForm() {
-        formContent.style.display = 'block';
-        toggleFormBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
-    }
-
-    toggleFormBtn.addEventListener('click', function() {
-        if (formContent.style.display === 'none') {
-            expandForm();
-        } else {
-            collapseForm();
-        }
-    });
-
     async function fetchRecipe() {
         const mood = moodSelect.value;
         const age = ageInput.value;
         const city = citySelect.value;
 
         showLoading();
-        collapseForm();
-        
+
         try {
             // Get IP info from localStorage
             const ipInfo = JSON.parse(localStorage.getItem('ipInfo'));
@@ -143,14 +120,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const recipe = await response.json();
-            
+
             hideLoading();
-            
+
             if (recipe.error) {
                 alert('No recipe found for this mood');
                 return;
             }
-            
+
             displayRecipe(recipe);
         } catch (error) {
             hideLoading();
@@ -160,32 +137,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayRecipe(recipe) {
-        recipeName.textContent = recipe.name;
-        prepTime.textContent = recipe.prepTime;
-        
-        // Add creation time if available
-        if (recipe.created_at) {
-            const timeElement = document.createElement('p');
-            timeElement.className = 'text-muted mb-3';
-            timeElement.innerHTML = `<small>Created on: ${recipe.created_at}</small>`;
-            recipeName.insertAdjacentElement('afterend', timeElement);
-        }
-        
-        ingredients.innerHTML = '';
+        document.getElementById('recipeName').textContent = recipe.name;
+        document.getElementById('prepTime').textContent = recipe.prepTime;
+
+        const ingredientsList = document.getElementById('ingredients');
+        ingredientsList.innerHTML = ''; // Clear existing ingredients
+
         recipe.ingredients.forEach(ingredient => {
             const li = document.createElement('li');
             li.className = 'list-group-item';
             li.textContent = ingredient;
-            ingredients.appendChild(li);
+            ingredientsList.appendChild(li);
         });
-        
-        instructions.textContent = recipe.instructions;
-        
+
+        const instructionsDiv = document.getElementById('instructions');
+        const instructionsWithBreaks = recipe.instructions.replace(/(\d+\. )/g, '<br>$1');
+        instructionsDiv.innerHTML = instructionsWithBreaks;
+
         recipeCard.style.display = 'block';
         setTimeout(() => recipeCard.classList.add('show'), 10);
+
     }
 
-    recipeForm.addEventListener('submit', function(e) {
+    recipeForm.addEventListener('submit', function (e) {
         e.preventDefault();
         if (this.checkValidity()) {
             fetchRecipe();
@@ -193,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.add('was-validated');
     });
 
-    newRecipeBtn.addEventListener('click', function() {
+    newRecipeBtn.addEventListener('click', function () {
         fetchRecipe();
     });
 
@@ -201,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeIPInfo();
 
     // Clear city selection if user manually changes it
-    citySelect.addEventListener('change', function() {
+    citySelect.addEventListener('change', function () {
         const ipInfo = JSON.parse(localStorage.getItem('ipInfo') || '{}');
         if (ipInfo.city && this.value !== ipInfo.city) {
             // Optionally store user's manual selection
@@ -216,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (ipInfo && ipInfo.ip) {
                 const targetIP = ipInfo.ip;
                 let currentIP = [0, 0, 0, 0];
+                const userIPSpan = document.getElementById('userIP');
 
                 function animateIP() {
                     let ipString = currentIP.join('.');
@@ -277,4 +252,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call updateHitCount and updateUserIP on page load
     updateHitCount();
     updateUserIP();
-}); 
+});
