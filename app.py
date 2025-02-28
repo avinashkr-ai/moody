@@ -12,7 +12,8 @@ import json
 from datetime import datetime
 import pytz
 import base64
-from flask_caching import Cache
+import atexit  # Import the atexit module
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # Load environment variables
 load_dotenv()
@@ -21,7 +22,8 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Configure Flask-Caching
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+#cache = Cache(app, config={'CACHE_TYPE': 'simple'})  # Assuming Cache isn't being used
+
 
 # Initialize Firebase
 if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
@@ -340,6 +342,30 @@ def save_feedback():
     except Exception as e:
         print(f"Error saving feedback: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+# Define the function that pings your website
+def wake_up_app():
+    """Pings the Moody Bomb website to prevent it from sleeping."""
+    try:
+        app_url = os.getenv('APP_URL')  # Assuming you have your app URL in the environment
+        if app_url:
+            response = requests.get(app_url)
+            if response.status_code == 200:
+                print(f"Successfully pinged {app_url} at {datetime.now()}")
+            else:
+                print(f"Failed to ping {app_url} (status code: {response.status_code}) at {datetime.now()}")
+        else:
+            print("APP_URL environment variable not set.")
+    except Exception as e:
+        print(f"Error occurred while pinging app: {e}")
+
+# Create a background scheduler
+scheduler = BackgroundScheduler()
+scheduler.add_job(wake_up_app, 'interval', minutes=9)  # Run every 9 minutes
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
     debug_mode = os.getenv('FLASK_DEBUG', '0') == '1'
