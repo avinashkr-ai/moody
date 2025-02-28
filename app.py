@@ -30,7 +30,7 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     credentials_dict = json.loads(credentials_json)
     cred = credentials.Certificate(credentials_dict)
 else:
-    # Development: use local file
+    # Development: use local file path 
     cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
