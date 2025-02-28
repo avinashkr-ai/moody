@@ -155,14 +155,6 @@ h6 {
     border-radius: var(--border-radius);
 }
 
-#formToggleContainer {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1rem 0;
-}
 
 .btn-outline-primary {
     transition: all 0.2s ease;
@@ -479,61 +471,10 @@ h6 {
     }
 }
 
-/* Form toggle button styles */
-#formToggleContainer .btn {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-width: 2px;
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px var(--shadow-light);
-}
-
-#formToggleContainer .fas {
-    font-size: 1.1rem;
-    transition: transform 0.3s ease;
-}
-
-#formToggleContainer .btn:hover {
-    background-color: var(--orange-gradient-start);
-    color: white;
-    transform: translateY(2px);
-    box-shadow: 0 4px 8px var(--shadow-medium);
-}
-
-#formToggleContainer .btn:hover .fa-chevron-down {
-    transform: translateY(1px);
-}
-
-#formToggleContainer .btn:hover .fa-chevron-up {
-    transform: translateY(-1px);
-}
-
-/* Adjust for mobile */
-@media (max-width: 768px) {
-    #formToggleContainer {
-        margin: 0.75rem 0;
-    }
-
-    #formToggleContainer .btn {
-        width: 36px;
-        height: 36px;
-        border-width: 1.5px;
-    }
-
-    #formToggleContainer .fas {
-        font-size: 1rem;
-    }
-}
-
 .navbar-text {
     margin-right: 1.25rem;
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--orange-gradient-start);
     text-shadow: 1px 1px 2px var(--shadow-light);
 }

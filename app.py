@@ -31,7 +31,7 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     cred = credentials.Certificate(credentials_dict)
 else:
     # Development: use local file
-    cred = credentials.Certificate('etc/secrets/adminsdk-py.json')
+    cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://cursorai-af01e-default-rtdb.firebaseio.com/'
