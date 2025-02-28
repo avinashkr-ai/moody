@@ -30,8 +30,8 @@ if os.getenv('FIREBASE_CREDENTIALS_BASE64'):
     credentials_dict = json.loads(credentials_json)
     cred = credentials.Certificate(credentials_dict)
 else:
-    # Development: use local file path 
-    cred = credentials.Certificate('/etc/secrets/adminsdk-py.json')
+    # Development: use local file
+    cred = credentials.Certificate('etc/secrets/adminsdk-py.json')
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://cursorai-af01e-default-rtdb.firebaseio.com/'
@@ -176,7 +176,7 @@ def index():
     feedback_ref = firebase_db.reference('feedback')
     feedback_data = feedback_ref.get()
 
-    # Convert feedback data to a list and calculate total and number of ratings
+    # Convert feedback data to a list and ensure rating is an integer
     feedback_list = []
     total_rating = 0
     num_ratings = 0
@@ -184,15 +184,17 @@ def index():
     if feedback_data:
         for key, value in feedback_data.items():
             try:
-                rating = int(value.get('rating', 0))  # Safely get and convert rating to int, default to 0
-            except (ValueError, TypeError):
-                rating = 0  # Handle cases where conversion fails or rating is None
-
+                rating = int(value.get('rating', 0))  # Convert rating to int, default to 0 if missing
+            except ValueError:
+                rating = 0  # If conversion fails, set to 0
+            
+            value['rating'] = rating
             feedback_list.append(value)
             total_rating += rating
             num_ratings += 1
-    # Calculate average rating, avoid division by zero
-    average_rating = (total_rating / num_ratings) if num_ratings > 0 else 0
+
+    # Calculate average rating
+    average_rating = total_rating / num_ratings if num_ratings > 0 else 0
 
     return render_template('index.html', ipinfo_token=ipinfo_token, feedback_list=feedback_list, average_rating=average_rating, **get_firebase_config())
 
