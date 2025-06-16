@@ -8,7 +8,6 @@ A Flask web application that generates personalized Indian recipes based on mood
 
 A mood-based Indian recipe recommendation system powered by Google's Gemini AI. The application suggests personalized recipes based on your current mood, age, and location.
 
-![Moody Bomb](static/images/preview.png)
 
 ## 🌟 Features
 
@@ -119,9 +118,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📧 Contact
 
 For questions or feedback, please contact:
-- GitHub: [@rock12231](https://github.com/rock12231)
-- LinkedIn: [rock1223](https://www.linkedin.com/in/rock1223/)
-- Twitter: [@rock12231](https://x.com/rock12231/)
+- GitHub: [@avinashkr-ai](https://github.com/avinashkr-ai)
+- LinkedIn: [@avinashkr-ai](https://www.linkedin.com/in/avinashkr-ai/)
+- Twitter: [@avinashkr_ai](https://x.com/avinashkr_ai/)
 2. Create a virtual environment:
    ```bash
    python -m venv venv
